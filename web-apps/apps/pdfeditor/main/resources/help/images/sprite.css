@@ -1,0 +1,332 @@
+@import "../../../../../common/main/resources/help/images/symbols.css";
+
+.big{
+	background-image: url(../images/big.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+.big-checkbox_checked {
+	background-position: 0px 0px;
+	width: 127px;
+	height: 45px;
+}
+
+.icon{
+	background-image: url(../images/icons.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+.icon-speech {
+	background-position: 0px 0px;
+	width: 28px;
+	height: 28px;
+}
+
+.icon-speechinput {
+	background-position: -28px 0px;
+	width: 28px;
+	height: 28px;
+}
+
+.icon-translator {
+	background-position: 0px -28px;
+	width: 26px;
+	height: 26px;
+}
+
+.icon-telegram_icon {
+	background-position: -26px -28px;
+	width: 24px;
+	height: 24px;
+}
+
+.icon-thesaurus_icon {
+	background-position: -56px 0px;
+	width: 28px;
+	height: 22px;
+}
+
+.icon-saveas_form_icon {
+	background-position: -56px -22px;
+	width: 22px;
+	height: 22px;
+}
+
+.icon-submit_form_icon {
+	background-position: 0px -54px;
+	width: 20px;
+	height: 22px;
+}
+
+.icon-coeditingmode {
+	background-position: -20px -54px;
+	width: 18px;
+	height: 22px;
+}
+
+.icon-versionhistoryicon {
+	background-position: -38px -54px;
+	width: 24px;
+	height: 21px;
+}
+
+.icon-favorites_icon {
+	background-position: -62px -54px;
+	width: 20px;
+	height: 20px;
+}
+
+.icon-show_password {
+	background-position: -84px 0px;
+	width: 20px;
+	height: 20px;
+}
+
+.icon-sortcommentsicon {
+	background-position: -84px -20px;
+	width: 20px;
+	height: 20px;
+}
+
+.icon-comment_toptoolbar {
+	background-position: 0px -76px;
+	width: 22px;
+	height: 19px;
+}
+
+.icon-savewhilecoediting {
+	background-position: -84px -40px;
+	width: 19px;
+	height: 19px;
+}
+
+.icon-removecomment_toptoolbar {
+	background-position: -22px -76px;
+	width: 15px;
+	height: 19px;
+}
+
+.icon-saveupdate {
+	background-position: -37px -76px;
+	width: 18px;
+	height: 18px;
+}
+
+.icon-search_advanced {
+	background-position: -55px -76px;
+	width: 18px;
+	height: 18px;
+}
+
+.icon-search_icon_header {
+	background-position: -73px -76px;
+	width: 18px;
+	height: 18px;
+}
+
+.icon-access_rights {
+	background-position: -104px 0px;
+	width: 22px;
+	height: 17px;
+}
+
+.icon-gotodocuments {
+	background-position: -104px -17px;
+	width: 20px;
+	height: 17px;
+}
+
+.icon-editcommenticon {
+	background-position: -104px -34px;
+	width: 16px;
+	height: 16px;
+}
+
+.icon-handtool {
+	background-position: -104px -50px;
+	width: 13px;
+	height: 16px;
+}
+
+.icon-pagethumbnails {
+	background-position: -104px -66px;
+	width: 12px;
+	height: 16px;
+}
+
+.icon-selectiontool {
+	background-position: -116px -66px;
+	width: 10px;
+	height: 16px;
+}
+
+.icon-search_options {
+	background-position: 0px -95px;
+	width: 22px;
+	height: 15px;
+}
+
+.icon-usersnumber {
+	background-position: -84px -59px;
+	width: 20px;
+	height: 15px;
+}
+
+.icon-chaticon {
+	background-position: -22px -95px;
+	width: 18px;
+	height: 15px;
+}
+
+.icon-chaticon_new {
+	background-position: -40px -95px;
+	width: 17px;
+	height: 15px;
+}
+
+.icon-print {
+	background-position: -57px -95px;
+	width: 17px;
+	height: 15px;
+}
+
+.icon-about {
+	background-position: -74px -95px;
+	width: 15px;
+	height: 15px;
+}
+
+.icon-fitpage {
+	background-position: -91px -76px;
+	width: 13px;
+	height: 15px;
+}
+
+.icon-pagenumber {
+	background-position: 0px -110px;
+	width: 65px;
+	height: 14px;
+}
+
+.icon-commentsicon {
+	background-position: -89px -95px;
+	width: 14px;
+	height: 14px;
+}
+
+.icon-save {
+	background-position: -103px -95px;
+	width: 14px;
+	height: 14px;
+}
+
+.icon-searchicon {
+	background-position: -65px -110px;
+	width: 14px;
+	height: 14px;
+}
+
+.icon-firstpage {
+	background-position: -79px -110px;
+	width: 11px;
+	height: 14px;
+}
+
+.icon-lastpage {
+	background-position: -90px -110px;
+	width: 11px;
+	height: 14px;
+}
+
+.icon-nextpage {
+	background-position: -117px -50px;
+	width: 9px;
+	height: 14px;
+}
+
+.icon-previouspage {
+	background-position: -117px -95px;
+	width: 9px;
+	height: 14px;
+}
+
+.icon-feedbackicon {
+	background-position: -104px -82px;
+	width: 15px;
+	height: 13px;
+}
+
+.icon-copy {
+	background-position: -101px -110px;
+	width: 14px;
+	height: 13px;
+}
+
+.icon-paste {
+	background-position: -126px 0px;
+	width: 14px;
+	height: 13px;
+}
+
+.icon-selectall {
+	background-position: -126px -13px;
+	width: 14px;
+	height: 13px;
+}
+
+.icon-zoomin {
+	background-position: -126px -26px;
+	width: 13px;
+	height: 13px;
+}
+
+.icon-deletecommenticon {
+	background-position: -126px -39px;
+	width: 11px;
+	height: 12px;
+}
+
+.icon-fitwidth {
+	background-position: 0px -124px;
+	width: 16px;
+	height: 11px;
+}
+
+.icon-resolvedicon {
+	background-position: -126px -51px;
+	width: 12px;
+	height: 11px;
+}
+
+.icon-resolveicon {
+	background-position: -126px -62px;
+	width: 12px;
+	height: 11px;
+}
+
+.icon-zoomout {
+	background-position: -126px -73px;
+	width: 10px;
+	height: 11px;
+}
+
+.icon-navigationicon {
+	background-position: -126px -84px;
+	width: 13px;
+	height: 10px;
+}
+
+.icon-searchdownbutton {
+	background-position: -126px -94px;
+	width: 14px;
+	height: 8px;
+}
+
+.icon-searchupbutton {
+	background-position: -126px -102px;
+	width: 14px;
+	height: 8px;
+}
+

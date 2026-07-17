@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+        <title>Link einfügen</title>
+		<meta charset="utf-8" />
+		<meta name="description" content="Add hyperlinks to a word or text fragment leading to an external website or to another slide in the same presentation" />
+		<link type="text/css" rel="stylesheet" href="../../../../../../common/main/resources/help/editor.css" />
+		<link type = "text/css" rel = "stylesheet" href = "../../images/sprite.css" />
+        <script type="text/javascript" src="../callback.js"></script>
+        <script type="text/javascript" src="../../../../../../common/main/resources/help/search/js/page-search.js"></script>
+	</head>
+	<body>
+		<div class="mainpart">
+			<div class="search-field">
+				<input id="search" class="searchBar" placeholder="Suche" type="text" onkeypress="doSearch(event)">
+			</div>
+			<h1>Link einfügen</h1>
+			<p>Um einen Link im <a target="_blank" href="https://www.onlyoffice.com/de/presentation-editor.aspx" onclick="onhyperlinkclick(this)"><b>Präsentationseditor</b></a> hinzuzufügen,</p>
+			<ol>
+				<li>Wählen Sie das Objekt aus, das Sie als Link anzeigen möchten, z. B. einen Textausschnitt, ein Bild oder eine Gruppe von Objekten.</li>
+				<li>Wechseln Sie in der oberen Symbolleiste auf die Registerkarte <b>Einfügen</b>.</li>
+				<li>Klicken Sie auf das Symbol <div class="icon icon-addhyperlink"></div> <b>Link</b> in der oberen Symbolleiste.</li>
+				<li>
+					Das Fenster <b>Linkeinstellungen</b> wird angezeigt, in dem Sie die Link-Parameter festlegen können:
+					<ul>
+						<li>
+							Wählen Sie den Linktyp, den Sie einfügen möchten:
+							<ul>
+								<li>
+									Verwenden Sie die Option <b>Externer Link</b> und geben Sie eine URL im Format <code>http://www.example.com</code> in das Feld <b>Verknüpfen mit</b> unten ein, wenn Sie einen Link hinzufügen möchten, der zu einer <b>externen</b> Website führt. Wenn Sie einen Link zu einer <b>lokalen</b> Datei hinzufügen müssen, geben Sie die URL im Format <code>Datei://Pfad/Präsentation.pptx</code> (für Windows) oder <code>Datei:///Pfad/Präsentation.pptx</code> (für macOS und Linux) in das Feld <b>Verknüpfen mit</b> unten ein.
+									<p class="note">Der Link <code>Datei://Pfad/Präsentation.pptx</code> oder <code>Datei:///Pfad/Präsentation.pptx</code> kann nur in der Desktop-Version des Editors geöffnet werden. Im Web-Editor können Sie den Link nur hinzufügen, ohne ihn öffnen zu können.</p>
+									<p><img alt="Linkeinstellungen" src="../../../../../../common/main/resources/help/de/images/hyperlinkwindow.png" /></p>
+								</li>
+								<li>
+									Wenn Sie einen Link hinzufügen möchten, der zu einer bestimmten Folie in der aktuellen Präsentation führt, wählen Sie die Option <b>Folie aus dieser Präsentation</b> und geben Sie die gewünschte Folie an. Die folgenden Optionen stehen Ihnen zur Verfügung: Nächste Folie, Vorherige Folie, Erste Folie, Letze Folie, Folie.
+									<p><img alt="Linkeinstellungen" src="../images/hyperlinkwindow2.png" /></p>
+								</li>
+							</ul>
+						</li>
+						<li><b>Angezeigter Text</b> — geben Sie einen Text ein, der klickbar wird und zu der im oberen Feld angegebenen Webadresse/Folie führt.</li>
+						<li><b>QuickInfo</b> — geben Sie einen Text ein, der in einem kleinen Dialogfenster angezeigt wird und den Nutzer über den Inhalt des Verweises informiert.</li>
+					</ul>
+				</li>
+				<li>Klicken Sie auf <b>OK</b>.</li>
+			</ol>
+			<p>Zum Einfügen eines Links können Sie alternativ auch die Tastenkombination <kbd>Strg</kbd>+<kbd>K</kbd> verwenden oder mit der rechten Maustaste an die Stelle klicken, an der ein Link eingefügt werden soll, und im Rechtsklickmenü die Option <b>Link</b> auswählen.</p>
+			<p class="note">Es ist auch möglich, ein Zeichen, ein Wort oder eine Wortkombination mit der Maus oder <a href="../HelpfulHints/KeyboardShortcuts.htm#textselection" onclick="onhyperlinkclick(this)">über die Tastatur</a> auszuwählen und dann wie oben beschrieben das Fenster <b>Linkeinstellungen</b> zu öffnen. In diesem Fall wird das Feld <b>Angezeigter Text</b> mit dem von Ihnen ausgewählten Textfragment gefüllt.</p>
+			<p>Bewegen Sie den Mauszeiger über den hinzugefügten Link, um den <b>QuickInfo</b> anzuzeigen, der den von Ihnen angegebenen Text enthält. Sie können dem Link folgen, indem Sie die <kbd>STRG</kbd>-Taste drücken und in Ihrer Präsentation auf den Link klicken.</p>
+			<p>Um den hinzugefügten Link zu bearbeiten oder zu löschen, klicken Sie mit der rechten Maustaste darauf, wählen Sie im Rechtsklickmenü die Option <b>Link</b> und dann die Aktion, die Sie ausführen möchten – <b>Link bearbeiten</b> oder <b>Link entfernen</b>.</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-copy">
+    <path stroke="#444" stroke-linecap="round" stroke-width="1.5" d="M8.25 13.546H5c-.69 0-1.25-.56-1.25-1.25v-7.5c0-.69.56-1.25 1.25-1.25h7.5c.69 0 1.25.56 1.25 1.25v3.25m-3 3.75v7.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25v-7.5c0-.69-.56-1.25-1.25-1.25H12c-.69 0-1.25.56-1.25 1.25Z" class="icon-stroke-gray-primary"/>
+  </g>
+</svg>

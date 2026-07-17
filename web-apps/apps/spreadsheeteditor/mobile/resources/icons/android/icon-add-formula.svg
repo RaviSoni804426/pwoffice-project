@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-add-formula">
+    <path stroke="#444" stroke-linecap="round" stroke-width="1.5" d="M17.5 7.5v-2a1 1 0 0 0-1-1H7.311a.75.75 0 0 0-.53 1.28l5.69 5.69a.75.75 0 0 1 0 1.06l-5.69 5.69a.75.75 0 0 0 .53 1.28h9.19a1 1 0 0 0 1-1v-2" class="icon-stroke-gray-primary"/>
+  </g>
+</svg>

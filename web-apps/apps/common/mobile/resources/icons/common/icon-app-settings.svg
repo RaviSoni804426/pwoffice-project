@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-app-settings">
+    <path stroke="#444" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 21.749H8a4 4 0 1 1 0-8h8a4 4 0 0 1 0 8Zm0-11H8a4 4 0 1 1 0-8h8a4 4 0 0 1 0 8Z" class="icon-stroke-gray-primary"/>
+    <path fill="#444" d="M16 4.749a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm-8 11a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" class="icon-fill-gray-primary"/>
+  </g>
+</svg>

@@ -1,0 +1,116 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+require([
+    'common/main/lib/util/define',
+    'common/main/lib/controller/ScreenReaderFocus',
+    'common/main/lib/component/ComboBoxDataView',
+    'common/main/lib/view/OptionsDialog',
+    'common/main/lib/view/CopyWarningDialog',
+    'common/main/lib/view/InsertTableDialog',
+    'common/main/lib/view/SelectFileDlg',
+    'common/main/lib/view/SymbolTableDialog',
+    'common/main/lib/view/PasswordDialog',
+    'common/main/lib/view/SignDialog',
+    'common/main/lib/view/SignSettingsDialog',
+    'common/main/lib/view/SaveAsDlg',
+    'common/main/lib/view/AutoCorrectDialog',
+    'common/main/lib/view/DocumentAccessDialog',
+    'common/main/lib/view/SearchDialog',
+    'common/main/lib/view/AdvancedSettingsWindow',
+    'common/main/lib/view/PluginDlg',
+    'common/main/lib/view/PluginPanel',
+    'common/main/lib/view/RenameDialog',
+    'common/main/lib/view/ExternalEditor',
+    'common/main/lib/view/ExternalDiagramEditor',
+    'common/main/lib/view/ExternalMergeEditor',
+    'common/main/lib/view/ExternalOleEditor',
+    'common/main/lib/view/ShapeShadowDialog',
+    'common/main/lib/view/CustomizeQuickAccessDialog',
+    'common/main/lib/view/LanguageDialog',
+    'common/main/lib/view/TextInputDialog',
+    'common/main/lib/view/DocumentHolderExt',
+    'common/main/lib/view/ExternalLinksDlg',
+    'common/main/lib/view/FormatSettingsDialog',
+    'common/main/lib/view/PdfSignDialog',
+    'common/main/lib/view/DocumentPropertyDialog',
+    'common/main/lib/view/MacrosDialog',
+    'common/main/lib/view/MacrosAiDialog',
+    'common/main/lib/view/ShortcutsDialog',
+    'common/main/lib/view/ShortcutsEditDialog',
+    'common/main/lib/view/Charts3DDlg',
+    'common/main/lib/component/MonacoEditor',
+
+    'documenteditor/main/app/controller/DocumentHolderExt',
+    'documenteditor/main/app/view/FileMenuPanels',
+    'documenteditor/main/app/view/DocumentHolderExt',
+    'documenteditor/main/app/view/ParagraphSettingsAdvanced',
+    'documenteditor/main/app/view/ImageSettingsAdvanced',
+    'documenteditor/main/app/view/TableSettingsAdvanced',
+    'documenteditor/main/app/view/DropcapSettingsAdvanced',
+    'documenteditor/main/app/view/StyleTitleDialog',
+    'documenteditor/main/app/view/TableFormulaDialog',
+    'documenteditor/main/app/view/TableToTextDialog',
+    'documenteditor/main/app/view/TextToTableDialog',
+    'documenteditor/main/app/view/WatermarkSettingsDialog',
+    'documenteditor/main/app/view/RoleDeleteDlg',
+    'documenteditor/main/app/view/RoleEditDlg',
+    'documenteditor/main/app/view/RolesManagerDlg',
+    'documenteditor/main/app/view/SaveFormDlg',
+    'documenteditor/main/app/view/CaptionDialog',
+    'documenteditor/main/app/view/NoteSettingsDialog',
+    'documenteditor/main/app/view/HyperlinkSettingsDialog',
+    'documenteditor/main/app/view/BookmarksDialog',
+    'documenteditor/main/app/view/NotesRemoveDialog',
+    'documenteditor/main/app/view/CrossReferenceDialog',
+    'documenteditor/main/app/view/TableOfContentsSettings',
+    'documenteditor/main/app/view/EditListItemDialog',
+    'documenteditor/main/app/view/ControlSettingsDialog',
+    'documenteditor/main/app/view/DateTimeDialog',
+    'documenteditor/main/app/view/PageMarginsDialog',
+    'documenteditor/main/app/view/PageSizeDialog',
+    'documenteditor/main/app/view/CustomColumnsDialog',
+    'documenteditor/main/app/view/ListSettingsDialog',
+    'documenteditor/main/app/view/LineNumbersDialog',
+    'documenteditor/main/app/view/HyphenationDialog',
+    'documenteditor/main/app/view/CellsAddDialog',
+    'documenteditor/main/app/view/NumberingValueDialog',
+    'documenteditor/main/app/view/ListIndentsDialog',
+    'documenteditor/main/app/view/ProtectDialog',
+    'documenteditor/main/app/view/PageNumberingDlg',
+    'documenteditor/main/app/view/MailMergeEmailDlg'
+], function () {
+    Common.NotificationCenter.trigger('app-pack:loaded');
+});

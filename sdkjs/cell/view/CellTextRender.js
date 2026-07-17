@@ -1,0 +1,382 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+"use strict";
+(
+	/**
+	 * @param {Window} window
+	 * @param {undefined} undefined
+	 */
+	function (window, undefined) {
+
+
+		/*
+		 * Import
+		 * -----------------------------------------------------------------------------
+		 */
+		var asc = window["Asc"];
+		var asc_lastindexof = asc.lastIndexOf;
+
+		function CharOffset(left, top, height, line) {
+			this.left = left;
+			this.top = top;
+			this.height = height;
+			this.lineIndex = line;
+		}
+
+		/**
+		 * CellTextRender
+		 * -----------------------------------------------------------------------------
+		 * @param {DrawingContext} drawingCtx  Context for drawing on
+		 *
+		 * @constructor
+		 * @memberOf Asc
+		 * @extends {AscCommonExcel.StringRender}
+		 */
+		function CellTextRender(drawingCtx) {
+			AscCommonExcel.StringRender.apply(this, arguments);
+
+			/** @type RegExp */
+			this.reWordBegining = new XRegExp("[^\\p{L}\\p{N}\\'][\\p{L}\\p{N}]", "i");
+			this.reWordEnding = new XRegExp("[\\p{L}\\p{N}][^\\p{L}\\p{N}\\']", "i");
+			this.cursorAtTrailingEdge = undefined;
+
+			return this;
+		}
+
+		CellTextRender.prototype = Object.create(AscCommonExcel.StringRender.prototype);
+		CellTextRender.prototype.constructor = CellTextRender;
+		CellTextRender.prototype.getLinesCount = function () {
+			return this.lines.length;
+		};
+
+		CellTextRender.prototype.getLineInfo = function (index) {
+			return this.lines.length > 0 && index >= 0 && index < this.lines.length ? this.lines[index] : null;
+		};
+
+		CellTextRender.prototype.calcLineOffset = function (index) {
+			if (index < 0) {
+				index = 0;
+			}
+			if (index > this.lines.length) {
+				index = this.lines.length;
+			}
+
+			var zoom = this.drawingCtx.getZoom();
+			for (var i = 0, h = 0, l = this.lines; i < index; ++i) {
+				h += Asc.round(l[i].th * zoom);
+			}
+			return h;
+		};
+		
+		CellTextRender.prototype.getPrevChar = function (pos, skipCombined) {
+			if (pos <= 0)
+				return 0;
+			else if (pos > this.chars.length)
+				return this.chars.length;
+			
+			--pos;
+			
+			// By default we skip combined chars
+			if (false === skipCombined)
+				return pos;
+			
+			while (pos > 0 && this._isCombinedChar(pos)) {
+				--pos;
+			}
+			
+			return pos;
+		};
+
+		CellTextRender.prototype.getNextChar = function (pos) {
+			
+			if (pos >= this.chars.length)
+				return this.chars.length;
+			else if (pos < 0)
+				return 0;
+			
+			++pos;
+			while (pos < this.chars.length && this._isCombinedChar(pos)) {
+				++pos;
+			}
+			
+			return pos;
+		};
+
+		CellTextRender.prototype.getPrevWord = function (pos) {
+			//TODO not changing the regex, converting to string
+			let s = AscCommonExcel.convertUnicodeToSimpleString(this.chars);
+			let i = asc_lastindexof(s.slice(0, pos), this.reWordBegining);
+			return i >= 0 ? i + 1 : 0;
+		};
+
+		CellTextRender.prototype.getNextWord = function (pos) {
+			//TODO not changing the regex, converting to string
+			let s = AscCommonExcel.convertUnicodeToSimpleString(this.chars);
+			let i = s.slice(pos).search(this.reWordBegining);
+			return i >= 0 ? pos + (i + 1) : this.getEndOfLine(pos);
+		};
+
+		CellTextRender.prototype.getEndOfWord = function (pos) {
+			let s = AscCommonExcel.convertUnicodeToSimpleString(this.chars);
+			let i = s.slice(pos).search(this.reWordEnding);
+			return i >= 0 ? pos + i + 1 : this.chars.length;
+		};
+
+		CellTextRender.prototype.getBeginOfLine = function (pos) {
+			pos = pos < 0 ? 0 : Math.min(pos, this.chars.length);
+
+			for (var l = this.lines, i = 0; i < l.length; ++i) {
+				if (pos >= l[i].beg && pos <= l[i].end) {
+					return l[i].beg;
+				}
+			}
+
+			// pos - at the end of text
+			var lastLine = l.length - 1;
+			var lastChar = this.chars.length - 1;
+			return this.charWidths[lastChar] !== 0 ? l[lastLine].beg : pos;
+		};
+
+		CellTextRender.prototype.getEndOfLine = function (pos) {
+			pos = pos < 0 ? 0 : Math.min(pos, this.chars.length);
+
+			var l = this.lines;
+			var lastLine = l.length - 1;
+			for (var i = 0; i < lastLine; ++i) {
+				if (pos >= l[i].beg && pos <= l[i].end) {
+					return l[i].end;
+				}
+			}
+
+			// pos - on the last line
+			var lastChar = this.chars.length - 1;
+			return pos > lastChar ? pos : lastChar + (this.charWidths[lastChar] !== 0 ? 1 : 0);
+		};
+
+		CellTextRender.prototype.getBeginOfText = function () {
+			return 0;
+		};
+
+		CellTextRender.prototype.getEndOfText = function () {
+			return this.chars.length;
+		};
+
+		CellTextRender.prototype.getPrevLine = function (pos) {
+			pos = pos < 0 ? 0 : Math.min(pos, this.chars.length);
+
+			for (var l = this.lines, i = 0; i < l.length; ++i) {
+				if (pos >= l[i].beg && pos <= l[i].end) {
+					return i <= 0 ? 0 : Math.min(l[i - 1].beg + pos - l[i].beg, l[i - 1].end);
+				}
+			}
+
+			// pos - at the end of text
+			var lastLine = l.length - 1;
+			var lastChar = this.chars.length - 1;
+			return this.charWidths[lastChar] === 0 || l.length < 2 ?
+				(0 > lastLine ? 0 : l[lastLine].beg) :
+				lastChar > 0 ? Math.min(l[lastLine - 1].beg + pos - l[lastLine].beg, l[lastLine - 1].end) : 0;
+		};
+
+		CellTextRender.prototype.getNextLine = function (pos) {
+			pos = pos < 0 ? 0 : Math.min(pos, this.chars.length);
+
+			var l = this.lines;
+			var lastLine = l.length - 1;
+			for (var i = 0; i < lastLine; ++i) {
+				if (pos >= l[i].beg && pos <= l[i].end) {
+					return Math.min(l[i + 1].beg + pos - l[i].beg, l[i + 1].end);
+				}
+			}
+
+			// pos - on the last line
+			return this.chars.length;
+		};
+
+		CellTextRender.prototype.getCharInfo = function (pos) {
+			for (var p = this.charProps[pos]; (!p || !p.font) && pos > 0; --pos) {
+				p = this.charProps[pos - 1];
+			}
+			return {
+				fsz: p.font.FontSize,
+				dh: p && p.lm && p.lm.bl2 > 0 ? p.lm.bl2 - p.lm.bl : 0,
+				h: p && p.lm ? p.lm.th : 0
+			};
+		};
+
+		CellTextRender.prototype.charOffset = function (pos, lineIndex, h) {
+			let zoom = this.drawingCtx.getZoom();
+			let li = this.lines[lineIndex];
+			let left;
+			let isRtl = this.isRtlLine();
+
+			if (pos <= li.beg) {
+				left = isRtl ? (li.startX + li.tw) : li.startX;
+			} else {
+				let atPos = null;
+				let beforePos = null;
+				let visibleEndX = li.startX;
+				this._forEachVisualChar(lineIndex, function (charIndex, visualX, width, direction) {
+					let right = visualX + width;
+					if (right > visibleEndX) visibleEndX = right;
+					if (charIndex === pos && atPos === null) {
+						atPos = (direction === AscBidi.DIRECTION.R) ? right : visualX;
+					}
+					if (charIndex === pos - 1 && beforePos === null) {
+						beforePos = (direction === AscBidi.DIRECTION.R) ? visualX : right;
+					}
+				});
+
+				if (atPos !== null && beforePos !== null && this.cursorAtTrailingEdge !== undefined && atPos !== beforePos) {
+					left = this.cursorAtTrailingEdge ? beforePos : atPos;
+				} else if (atPos !== null) {
+					left = atPos;
+				} else if (beforePos !== null) {
+					left = beforePos;
+				} else {
+					left = isRtl ? li.startX : visibleEndX;
+				}
+			}
+
+			return new CharOffset(left, Asc.round(h * zoom), Asc.round(li.th * zoom), lineIndex);
+		};
+
+		CellTextRender.prototype.calcCharOffset = function (pos, lineIndex) {
+			var t = this, l = t.lines, i, h, co;
+
+			if (l.length < 1) {
+				return null;
+			}
+
+			if (pos < 0) {
+				pos = 0;
+			}
+			if (pos > t.chars.length) {
+				pos = t.chars.length;
+			}
+
+			for (i = 0, h = 0; i < l.length; ++i) {
+				if (pos >= l[i].beg && pos <= l[i].end) {
+					//end of line and start of line can have same index
+					if (!(lineIndex != null && (pos === l[i].end/* || pos === l[i].beg*/) && lineIndex !== i)) {
+						return this.charOffset(pos, i, h);
+					}
+				}
+				if (i !== l.length - 1) {
+					h += l[i].th;
+				}
+			}
+
+			co = this.charOffset(pos, i - 1, h);
+			return co;
+		};
+
+		CellTextRender.prototype.getCharsCount = function () {
+			return this.chars.length;
+		};
+
+		CellTextRender.prototype.getChars = function (pos, len) {
+			return this.chars.slice(pos, pos + len);
+		};
+
+		CellTextRender.prototype.getCharWidth = function (pos) {
+			return this.charWidths[pos];
+		};
+		
+		CellTextRender.prototype.getCharPosByXY = function(x, y, topLine, zoom) {
+			let line = this.getLineByY(y, topLine, zoom);
+			if (line < 0) {
+				return -1;
+			}
+
+			let lineInfo = this.getLineInfo(line);
+			let bestPos = lineInfo.beg;
+			let bestDist = Infinity;
+			let isTrailing = false;
+			let self = this;
+
+			this._forEachVisualChar(line, function(charIndex, visualX, width, direction) {
+				if (self._isCombinedChar(charIndex)) return;
+
+				let leftEdge = visualX;
+				let rightEdge = visualX + width;
+
+				if (direction === AscBidi.DIRECTION.R) {
+					let distRight = Math.abs(x - rightEdge);
+					let distLeft = Math.abs(x - leftEdge);
+					if (distRight < bestDist) { bestDist = distRight; bestPos = charIndex; isTrailing = false; }
+					if (distLeft < bestDist) { bestDist = distLeft; bestPos = charIndex + 1; isTrailing = true; }
+				} else {
+					let distLeft = Math.abs(x - leftEdge);
+					let distRight = Math.abs(x - rightEdge);
+					if (distLeft < bestDist) { bestDist = distLeft; bestPos = charIndex; isTrailing = false; }
+					if (distRight < bestDist) { bestDist = distRight; bestPos = charIndex + 1; isTrailing = true; }
+				}
+			});
+
+			this.cursorAtTrailingEdge = isTrailing;
+
+			let maxPos = line === this.getLinesCount() - 1 ? lineInfo.end + 1 : lineInfo.end;
+			if (bestPos > maxPos) bestPos = maxPos;
+			if (bestPos < lineInfo.beg) bestPos = lineInfo.beg;
+
+			return bestPos;
+		};
+		
+		CellTextRender.prototype.getLineByY = function(y, topLine, zoom) {
+			let lineCount = this.getLinesCount();
+			if (lineCount <= 0) {
+				return -1;
+			}
+			
+			let lineInfo;
+			for (let _y = 0, line = Math.max(topLine, 0); line < lineCount; ++line) {
+				lineInfo = this.getLineInfo(line);
+				_y += Asc.round(lineInfo.th * zoom);
+				if (y <= _y) {
+					return line;
+				}
+			}
+			
+			return lineCount - 1;
+		};
+		
+
+		//------------------------------------------------------------export---------------------------------------------------
+		window['AscCommonExcel'] = window['AscCommonExcel'] || {};
+		window["AscCommonExcel"].CellTextRender = CellTextRender;
+	}
+)(window);

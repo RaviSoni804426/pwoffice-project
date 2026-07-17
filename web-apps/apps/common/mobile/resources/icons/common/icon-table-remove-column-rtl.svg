@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-table-remove-column-rtl" clip-path="url(#a)">
+    <path fill="#FF3B30" d="M15.585 15.558a.75.75 0 0 1 1.06-1.06l2.299 2.298 2.298-2.298a.75.75 0 1 1 1.06 1.06l-2.298 2.299 2.299 2.298a.75.75 0 1 1-1.06 1.06l-2.3-2.297-2.297 2.297a.75.75 0 0 1-1.06-1.06l2.297-2.298-2.298-2.299Z" class="icon-fill-red"/>
+    <path fill="#444" fill-rule="evenodd" d="M3.504 3.546a1.75 1.75 0 0 0-1.75 1.75v13c0 .966.784 1.75 1.75 1.75h9.94a2.74 2.74 0 0 1 .726-1.305l.196-.195H9.254v-3.5h4.114c-.005-.71.262-1.42.802-1.961l.001-.001a2.75 2.75 0 0 1 3.89 0l.884.884.884-.884a2.737 2.737 0 0 1 1.425-.757V5.296a1.75 1.75 0 0 0-1.75-1.75h-16Zm4.25 15h-4.25a.25.25 0 0 1-.25-.25v-3.25h4.5v3.5Zm6-5h-4.5v-3.5h4.5v3.5Zm-6 0h-4.5v-3.5h4.5v3.5Zm6-5h-4.5v-3.5h4.5v3.5Zm-6 0h-4.5v-3.25a.25.25 0 0 1 .25-.25h4.25v3.5Z" class="icon-fill-gray-primary" clip-rule="evenodd"/>
+  </g>
+  <defs>
+    <clipPath id="a" class="a">
+      <path fill="#fff" d="M0 0h24v24H0z"/>
+    </clipPath>
+  </defs>
+</svg>

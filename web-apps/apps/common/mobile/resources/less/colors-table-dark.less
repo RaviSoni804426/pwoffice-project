@@ -1,0 +1,115 @@
+:root {
+    .theme-type-dark,
+    .theme-dark {
+        --background-primary: #232323;
+        --background-secondary: #333;
+        --background-tertiary: #131313;
+        --background-menu-divider: fade(#545458, 50%);
+        --background-notification-badge: #F4D804;
+        --background-button: #333333;
+        --background-notification-badge: #F4D804;
+
+        --text-normal: fade(#FFF, 87%);
+        --text-secondary: fade(#FFF, 60%);
+        --text-tertiary: fade(#FFF, 40%);
+        --text-link: #1976D2;
+        --text-error: #FF453A;
+
+        --fill-black: #000;
+        --fill-white: #FFF;
+        --icon-fill-gray-primary: #FBFBFB;
+        --icon-stroke-gray-primary: #FBFBFB;
+        --icon-fill-gray-secondary: #F2F2F2;
+        --icon-fill-blue-primary: #92B7F0;
+        --icon-stroke-blue-primary: #92B7F0;
+        --icon-fill-blue-secondary: #B7CFF5;
+        --icon-fill-red: #FCA5A5;
+        --icon-stroke-red: #FCA5A5;
+        --icon-fill-green: #78B588;
+        --icon-stroke-green: #78B588;
+        --icon-stroke-white-base: #FFFFFF;
+        --icon-fill-blue-brend-primary: #208BFF;
+        --icon-stroke-blue-brend-primary: #208BFF;
+        --icon-fill-blue-brend-secondary: #2D4F76;
+        --icon-fill-green-brend-primary: #34C759;
+        --icon-stroke-green-brend-primary: #34C759;
+        --icon-fill-green-brend-secondary: #2A6539;
+        --icon-fill-red-brend-primary: #D25A3C;
+        --icon-fill-red-brend-secondary: #69392D;
+        --icon-fill-type-preview: #CFCFCF;
+
+        --brand-word: #208BFF;
+        --brand-cell: #34C759;
+        --brand-slide: #FE8C33;
+        --brand-form: #d25a3c;
+        --brand-visio: #6065ff;
+        --brand-primary: #3E9CF0;
+        --brand-secondary: #FFAF49;
+        --brand-text-on-brand: #000;
+
+        --toolbar-background: #333; 
+        --toolbar-icons: #FBFBFB; 
+        --toolbar-segment: #FFF;
+        --toolbar-tab-normal: #757575;
+
+        --draw-toolbar-background: #232323;
+        --draw-toolbar-border: #54545866;
+
+        --component-disabled-opacity: .4;
+
+        --image-border-types-filter: invert(100%) brightness(4);
+
+        --active-opacity-word: fade(#446995, 20%);
+        --active-opacity-slide: fade(#BE664F, 20%);
+        --active-opacity-cell: fade(#40865C, 20%);
+
+        --image-border-types-filter: invert(100%) brightness(4);
+
+        // Canvas
+
+        --canvas-background: #555; 
+        --canvas-content-background: #fff;
+        --canvas-page-border: #616161; 
+
+        --canvas-ruler-background: #555; 
+        //--canvas-ruler-border: #2A2A2A;
+        --canvas-ruler-margins-background: #444; 
+        --canvas-ruler-mark: #b6b6b6; 
+        --canvas-ruler-handle-border: #b6b6b6;  
+        --canvas-ruler-handle-border-disabled: #808080; 
+
+        --canvas-high-contrast: #000;
+        //--canvas-high-contrast-disabled: #000;
+
+        --canvas-cell-border: #cacaca; 
+        --canvas-cell-title-border: #757575; 
+        --canvas-cell-title-border-hover: #858585;
+        --canvas-cell-title-border-selected: #9e9e9e; 
+        --canvas-cell-title-text: #d9d9d9; 
+        --canvas-cell-title-background: #555; 
+        --canvas-cell-title-background-selected: #888; 
+
+						
+
+        //--canvas-scroll-thumb: #404040;
+        //--canvas-scroll-thumb-hover: #999;
+        //--canvas-scroll-thumb-pressed: #adadad;
+        //--canvas-scroll-thumb-border: #2a2a2a;
+        //--canvas-scroll-thumb-border-hover: #999;
+        //--canvas-scroll-thumb-border-pressed: #adadad;
+        //--canvas-scroll-arrow: #999;
+        //--canvas-scroll-arrow-hover: #404040;
+        //--canvas-scroll-arrow-pressed: #404040;
+        //--canvas-scroll-thumb-target: #999;
+        //--canvas-scroll-thumb-target-hover: #404040;
+        //--canvas-scroll-thumb-target-pressed: #404040;
+    }
+
+    .theme-type-dark.pdf-view, .theme-dark.pdf-view {
+        --brand-word: var(--brand-form);
+
+        &__android {
+            --toolbar-background: var(--background-primary);
+        }
+    }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-format-currency">
+    <g class="icon-stroke-gray-primary">
+      <path stroke="#444" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.414" stroke-width="1.5" d="M2.5 5.296h19a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-19a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z"/>
+      <path stroke="#444" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.414" stroke-width="1.5" d="M11.9 9.696h.2a2 2 0 0 1 2 2v.2a2 2 0 0 1-2 2h-.2a2 2 0 0 1-2-2v-.2a2 2 0 0 1 2-2Zm6.4 2.1a.7.7 0 1 1 1.4 0 .7.7 0 0 1-1.4 0Zm-14 0a.7.7 0 1 1 1.4 0 .7.7 0 0 1-1.4 0Z"/>
+    </g>
+  </g>
+</svg>

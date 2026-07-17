@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 30 30">
+  <g class="icon-menu-comment">
+    <path fill="#8E8E93" fill-rule="evenodd" d="M10 15a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-3 1.714a1.714 1.714 0 1 0 0-3.428 1.714 1.714 0 0 0 0 3.428ZM18 15a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-3 1.714a1.714 1.714 0 1 0 0-3.428 1.714 1.714 0 0 0 0 3.428ZM26 15a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-3 1.714a1.714 1.714 0 1 0 0-3.428 1.714 1.714 0 0 0 0 3.428Z" class="icon-fill-gray-secondary" clip-rule="evenodd"/>
+  </g>
+</svg>

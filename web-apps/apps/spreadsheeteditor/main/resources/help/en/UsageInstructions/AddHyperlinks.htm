@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add links</title>
+		<meta charset="utf-8" />
+		<meta name="description" content="Add links to a word or text fragment leading to an external website or another worksheet" />
+		<link type="text/css" rel="stylesheet" href="../../../../../../common/main/resources/help/editor.css" />
+		<link type = "text/css" rel = "stylesheet" href = "../../images/sprite.css" />
+        <script type="text/javascript" src="../callback.js"></script>
+        <script type="text/javascript" src="../../../../../../common/main/resources/help/search/js/page-search.js"></script>
+	</head>
+	<body>
+		<div class="mainpart">
+        <div class="search-field">
+            <input id="search" class="searchBar" placeholder="Search" type="text" onkeypress="doSearch(event)">
+        </div>
+			<h1>Add links</h1>
+			<p>To add a link in the <a href="https://www.onlyoffice.com/spreadsheet-editor.aspx" target="_blank" onclick="onhyperlinkclick(this)"><b>Spreadsheet Editor</b></a>:</p>
+			<ol>
+				<li>Select the object that you want to display as a link, e.g., a cell, an image, or a group of objects.</li>
+                <li>Switch to the <a href="../ProgramInterface/InsertTab.htm" target="_blank"><b>Insert</b></a> tab of the top toolbar.</li>
+				<li>Click the <div class = "icon icon-addhyperlink"></div> <b>Link</b> icon on the top toolbar.</li>
+				<li>
+					The <b>Link settings</b> window will appear where you can specify the link parameters:
+					<ul>
+						<li>
+							Select the required link type:
+							<p>Use the <b>External Link</b> option and enter a URL in the <code>http://www.example.com</code> format in the <b>Link to</b> field below if you need to add a link leading to an <b>external</b> website. If you need to add a link to a <b>local</b> file, enter the URL in the <code>file://path/Spreadsheet.xlsx</code> (for Windows) or <code>file:///path/Spreadsheet.xlsx</code> (for macOS and Linux) format in the <b>Link to</b> field.</p>
+							<p class="note">The <code>file://path/Spreadsheet.xlsx</code> or <code>file:///path/Spreadsheet.xlsx</code> link type can be opened only in the desktop version of the editor. In the web editor, you can only add the link without being able to open it.</p>
+							<p><img alt="Link settings window" src="../../../../../../common/main/resources/help/en/images/hyperlinkwindow.png" /></p>
+							<p>Use the <b>Internal Data Range</b> option, select a worksheet and a cell range in the fields below, or a previously added <a href="UseNamedRanges.htm" onclick="onhyperlinkclick(this)">Named range</a> if you need to add a link leading to a certain cell range in the same spreadsheet.</p>
+							<p>You can also generate an external link that will lead to a particular cell or a range of cells by clicking the <b>Get Link</b> button or using the <b>Get link to this range</b> option in the contextual right-click menu of the required cell range. The <b>Get link to this range</b> option is also available in the viewing mode.</p>
+							<p><img alt="Link settings window" src="../images/internallink.png" /></p>
+						</li>
+						<li>
+							<b>Display</b> — enter a text that will become clickable and lead to the web address specified in the upper field.
+							<p class="note">If the selected cell already contains data, it will be automatically displayed in this field.</p>
+						</li>
+						<li><b>ScreenTip Text</b> — enter a text that will become visible in a small pop-up window with a brief note or label connected to the link.</li>
+					</ul>
+				</li>
+				<li>Click the <b>OK</b> button.</li>
+			</ol>
+			<p>To add a link, you can also use the <kbd>Ctrl</kbd>+<kbd>K</kbd> key combination or click the position where the link should be added with the right mouse button and select the <b>Link</b> option in the right-click menu.</p>
+			<p>When you hover the cursor over the added link, the <b>ScreenTip</b> will appear. To follow the link, click the link in the spreadsheet. To select a cell that contains a link without opening the link, click and hold the mouse button.</p>
+			<p>To delete the added link, select the cell containing the added link and press the <kbd>Delete</kbd> key, or right-click the cell and select the <b>Clear All</b> option from the drop-down list.</p>
+		</div>
+	</body>
+</html>

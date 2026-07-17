@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-edit">
+    <path stroke="#444" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m14.75 6.336-11 11v3h3l11-11m-3-3 2.293-2.293a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414L17.75 9.336m-3-3 3 3M10.5 20.5h10" class="icon-stroke-gray-primary"/>
+  </g>
+</svg>
