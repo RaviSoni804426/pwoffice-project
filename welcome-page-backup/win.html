@@ -37,7 +37,7 @@
                     <p>A random secret is generated automatically if a custom secret has not been added during installation. The secret is available in:</p>
                     <div class="code-wrapper">
                         <pre><code id="jwt-path">%ProgramFiles%\PW Office\DocumentServer\config\local.json</code></pre>
-                        <button class="copy-btn" onclick="copyText('jwt-path')">Copy</button>
+                        <button class="copy-btn" onclick="copyText('jwt-path', this)">Copy</button>
                     </div>
                     <p>in the <strong>services.CoAuthoring.secret.inbox.string</strong> parameter.</p>
                     <p>If you want to replace the default secret with a custom key, configure it using your local config file.</p>
@@ -61,7 +61,7 @@
                         <h4>Start test example:</h4>
                         <div class="code-wrapper">
                             <pre><code id="start-cmd">net start DsExampleSvc</code></pre>
-                            <button class="copy-btn" onclick="copyText('start-cmd')">Copy</button>
+                            <button class="copy-btn" onclick="copyText('start-cmd', this)">Copy</button>
                         </div>
                     </div>
 
@@ -69,7 +69,7 @@
                         <h4>Add it to the autostart:</h4>
                         <div class="code-wrapper">
                             <pre><code id="autostart-cmd">sc.exe config DsExampleSvc start=auto</code></pre>
-                            <button class="copy-btn" onclick="copyText('autostart-cmd')">Copy</button>
+                            <button class="copy-btn" onclick="copyText('autostart-cmd', this)">Copy</button>
                         </div>
                     </div>
 
@@ -99,10 +99,9 @@
     </footer>
 
     <script>
-        function copyText(id) {
+        function copyText(id, btn) {
             const code = document.getElementById(id).innerText;
             navigator.clipboard.writeText(code).then(() => {
-                const btn = document.querySelector(`#${id} ~ .copy-btn`);
                 const originalText = btn.innerText;
                 btn.innerText = 'Copied!';
                 btn.style.background = '#10b981';
