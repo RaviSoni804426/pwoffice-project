@@ -1,86 +1,120 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html><head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width">
-
-    <!--
-    *
-    * (c) Copyright Ascensio System SIA 2026
-    *
-    * Licensed under the Apache License, Version 2.0 (the "License");
-    * you may not use this file except in compliance with the License.
-    * You may obtain a copy of the License at
-    *
-    *     http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
-    *
-    -->
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PW Office Docs Community Edition</title>
     <link href="css/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:900,800,700,600,500,400,300&subset=latin,cyrillic-ext,cyrillic,latin-ext" />
     <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 </head>
 <body>
     <header>
-        <a href="#" target="_blank">
-                    <img src="css/pw-logo.png" alt="PW Office" style="height:28px; margin:10px 0 0 32px;">
-        </a>
+        <div class="header-container">
+            <img src="css/pw-logo.png" alt="PW Office Logo">
+        </div>
     </header>
-    <div class="gray-block">
-        <div class="content-block">
-                <h1 class="orange-text">PW Office Docs Community Edition installed</h1>
-                <p>To edit office documents and collaborate, integrate PW Office Docs into your sync&share app.</p>
-            <h2>Integration options</h2>
-                <div class="links-block">
-                    <a href="https://www.onlyoffice.com/collaboration-platform.aspx?utm_source=test_example&utm_medium=start_screen&utm_campaign=installation" target="_blank">PW Office Groups</a>|
-                    <a href="https://www.onlyoffice.com/all-connectors.aspx?utm_source=test_example&utm_medium=start_screen&utm_campaign=installation" target="_blank">Connectors for 3rd party apps</a>|
-                    <a href="https://api.onlyoffice.com/docs/docs-api/get-started/basic-concepts/" target="_blank">Integration API for developers</a>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <h1 class="hero-title">PW Office Docs Community Edition installed</h1>
+            <p class="hero-subtitle">To edit office documents and collaborate, integrate PW Office Docs into your sync&share app.</p>
+        </section>
+
+        <div class="cards-container">
+            <!-- JWT Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 24px; height: 24px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                    </div>
+                    <h2 class="card-title">JWT Authentication</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-subtitle">Starting from version 7.2, JWT is enabled by default.</p>
+                    <p>A random secret is generated automatically if a custom secret has not been added during installation. To obtain the default secret, run this command:</p>
+                    <div class="code-wrapper">
+                        <pre><code id="jwt-cmd">sudo docker exec 30490aa98d10 /var/www/pw-office/documentserver/npm/json -f /etc/pw-office/documentserver/local.json 'services.CoAuthoring.secret.session.string'</code></pre>
+                        <button class="copy-btn" onclick="copyText('jwt-cmd')">Copy</button>
+                    </div>
+                    <p>You can replace the default secret with a custom key using Docker environment variables.</p>
+                </div>
+            </div>
+
+            <!-- Testing Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 24px; height: 24px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="card-title">Testing before integration</h2>
+                </div>
+                <div class="card-body">
+                    <p>Use the integrated test example, a simple document management system, to check if the editors are running correctly.</p>
+                    
+                    <div class="instruction-step">
+                        <h4>Start test example:</h4>
+                        <div class="code-wrapper">
+                            <pre><code id="start-cmd">sudo docker exec 30490aa98d10 sudo supervisorctl start ds:example</code></pre>
+                            <button class="copy-btn" onclick="copyText('start-cmd')">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="instruction-step">
+                        <h4>Add it to the autostart:</h4>
+                        <div class="code-wrapper">
+                            <pre><code id="autostart-cmd">sudo docker exec 30490aa98d10 sudo sed 's,autostart=false,autostart=true,' -i /etc/supervisor/conf.d/ds-example.conf</code></pre>
+                            <button class="copy-btn" onclick="copyText('autostart-cmd')">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="action-area">
+                        <p>If you already installed the test example, access it here:</p>
+                        <a href="../example/" class="primary-btn">
+                            <span>Go to Test Example</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="alert-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p>Please do NOT use the test example on your own server without proper code modifications. It is intended for testing purposes only and must be disabled before launching the editors into production.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="notice_block">
-        <h1>Starting from version 7.2,  JWT is enabled by default.</h1> <br>
-           <p class="notice_text">A random secret is generated automatically if a custom secret has not been added during installation. To obtain the default secret, run this command:</p>
-                <pre> sudo docker exec 30490aa98d10 /var/www/onlyoffice/documentserver/npm/json -f /etc/onlyoffice/documentserver/local.json 'services.CoAuthoring.secret.session.string'</span></pre>
-        <p class="notice_text notice_margin">You can replace the default secret with a custom key using Docker env.</p>
-                 <p class="notice_text notice_margin">More information about JWT in the <a href="https://api.onlyoffice.com/docs/docs-api/additional-api/signature/">documentation.</a></p>
-    </div>
-    <div>
-        <div class="content-block">
-                <h1>Testing before integration</h1>
-                <p>Use the integrated test example, a simple doc management system, to check if the editors are running correctly.</p>
-                <h3>Start test example:</h3>
-                <pre>sudo docker exec 30490aa98d10 sudo supervisorctl start ds:example</pre>
-                                   <h3>Add it to the autostart:</h3>
-                <pre>sudo docker exec 30490aa98d10 sudo sed 's,autostart=false,autostart=true,' -i /etc/supervisor/conf.d/ds-example.conf</pre>
-                <p>If you already installed test example, access it here:</p>
-                <a href="../example/">
-                    <div class="button">GO TO TEST EXAMPLE</div>
-                </a>
-            <p>Please do NOT use a test example on your own server without proper code modifications. It is intended for testing purposes only and must be disabled before launching the editors into production.</p>
-        </div>
-    </div>
-    <div class="black-block">
-        <div class="content-block">
-                <h1>Getting help</h1>
-                <p>
-                For free Community version, create issues on <a href="https://github.com/ONLYOFFICE/" target="_blank">GitHub</a> or use our forum.
-                            </br>
-                For commercial versions, contact us <a href="https://helpdesk.onlyoffice.com/" target="_blank">here</a>.
-                </p>
-            <h1>PW Office Docs editions</h1>
-                <p>Want to know what else we've got?
-                    <a href="https://www.onlyoffice.com/compare-editions.aspx" target="_blank">Compare editions</a>
-            </p>
-            <footer>© PW Office 2026. All rights reserved.</footer>
-        </div>
-    </div>
+    </main>
+
+    <footer>
+        <p>© 2026 PW Office. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function copyText(id) {
+            const code = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector(`#${id} ~ .copy-btn`);
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.style.background = '#10b981';
+                btn.style.color = '#ffffff';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
