@@ -1,78 +1,48 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en">
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PW Office Docs - Test Example Disabled</title>
+    <meta name="viewport" content="width=device-width">
+
+    <!--
+    *
+    * (c) Copyright Ascensio System SIA 2026
+    *
+    * Licensed under the Apache License, Version 2.0 (the "License");
+    * you may not use this file except in compliance with the License.
+    * You may obtain a copy of the License at
+    *
+    *     http://www.apache.org/licenses/LICENSE-2.0
+    *
+    * Unless required by applicable law or agreed to in writing, software
+    * distributed under the License is distributed on an "AS IS" BASIS,
+    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    * See the License for the specific language governing permissions and
+    * limitations under the License.
+    *
+    -->
+
+    <title>PW Office Docs - Test example disabled</title>
     <link href="../welcome/css/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:900,800,700,600,500,400,300&subset=latin,cyrillic-ext,cyrillic,latin-ext" />
     <link rel="stylesheet" type="text/css" href="../welcome/css/stylesheet.css">
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <div class="header-container">
-            <img src="../welcome/css/pw-logo.png" alt="PW Office Logo">
-        </div>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="../welcome/css/pw-logo.png" alt="PW Office" style="height:28px; margin:10px 0 0 32px;">
+      </a>
     </header>
-
-    <main class="main-content">
-        <section class="hero-section">
-            <h1 class="hero-title">Test example is not running</h1>
-            <p class="hero-subtitle">Start the service and try again.</p>
-        </section>
-
-        <div class="cards-container">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 24px; height: 24px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-                    <h2 class="card-title">Launch Instructions</h2>
-                </div>
-                <div class="card-body">
-                    <p>To run the test example, execute the following command in your terminal:</p>
-                    <div class="code-wrapper">
-                        <pre><code id="start-cmd">sudo docker exec 30490aa98d10 supervisorctl start ds:example</code></pre>
-                        <button class="copy-btn" onclick="copyText('start-cmd', this)">Copy</button>
-                    </div>
-
-                    <div class="action-area" style="margin-top: 2rem;">
-                        <p>Once started, try accessing the test example again:</p>
-                        <a href="../example/" class="primary-btn">
-                            <span>Try Again</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p>© 2026 PW Office. All rights reserved.</p>
-    </footer>
-
-    <script>
-        function copyText(id, btn) {
-            const code = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = 'Copied!';
-                btn.style.background = '#10b981';
-                btn.style.color = '#ffffff';
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.style.background = '';
-                    btn.style.color = '';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
-        }
-    </script>
-</body>
+    <div class="gray-block">
+      <div class="content-block">
+        <h1 class="orange-text">Test example is not running</h1>
+        <p>Start the service and try again.</p>
+        <pre>sudo docker exec 30490aa98d10 supervisorctl start ds:example</pre>
+        <a href="../example/">
+          <div class="button">TRY AGAIN</div>
+        </a>
+      </div>
+    </div>
+  </body>
 </html>
