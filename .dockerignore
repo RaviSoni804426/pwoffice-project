@@ -1,10 +1,13 @@
 # Ignore everything by default
 *
 
-# Allow only web-apps folder for build context
+# Allow web-apps and sdkjs folders for build context
 !web-apps
+!sdkjs
 
-# Exclude large development/history folders inside web-apps
+# Exclude large development/history/unnecessary folders
 web-apps/.git
 web-apps/**/node_modules
 web-apps/**/.git
+sdkjs/.git
+sdkjs/**/.git

@@ -19,6 +19,12 @@ const db = new sqlite3.Database(dbPath, (err) => {
     db.run('PRAGMA foreign_keys = ON;', (err) => {
       if (err) console.error('Failed to enable foreign keys:', err.message);
     });
+    db.run('PRAGMA journal_mode = WAL;', (err) => {
+      if (err) console.error('Failed to set WAL journal mode:', err.message);
+    });
+    db.run('PRAGMA synchronous = NORMAL;', (err) => {
+      if (err) console.error('Failed to set synchronous normal:', err.message);
+    });
   }
 });
 
@@ -99,6 +105,11 @@ async function initDb() {
         FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
+
+    // Create indexes for performance
+    await query.run(`CREATE INDEX IF NOT EXISTS idx_documents_workspace_id ON documents(workspace_id)`);
+    await query.run(`CREATE INDEX IF NOT EXISTS idx_documents_owner_id ON documents(owner_id)`);
+    await query.run(`CREATE INDEX IF NOT EXISTS idx_user_workspaces_user_id ON user_workspaces(user_id)`);
 
     console.log('Database tables initialized successfully.');
   } catch (err) {
