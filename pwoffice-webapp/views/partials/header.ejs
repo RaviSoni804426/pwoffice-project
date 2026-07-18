@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PW Office - Workspace & Document Editor</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="/" class="logo-link">
+        <img src="/images/pw-logo.png" alt="PW Office Logo" class="logo-img">
+        <span class="logo-text">PW Office</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/#features" style="color: var(--text-secondary); margin-right: 1rem; font-weight: 500;">Features</a>
+        <a href="/#pricing" style="color: var(--text-secondary); margin-right: 1.5rem; font-weight: 500;">Pricing</a>
+        <% if (locals.user) { %>
+          <div class="nav-user">
+            <span class="user-name">Hello, <%= user.name %></span>
+            <a href="/workspaces" class="btn btn-secondary">Workspaces</a>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+          </div>
+        <% } else { %>
+          <a href="/login" class="btn btn-secondary">Login</a>
+          <a href="/signup" class="btn btn-primary">Sign Up</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main>

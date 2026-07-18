@@ -1,0 +1,191 @@
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const { query } = require('../db');
+const { requireAuth } = require('../middleware/auth');
+
+// GET Editor Page
+router.get('/editor/:docId', requireAuth, async (req, res) => {
+  const docId = req.params.docId;
+
+  try {
+    const document = await query.get('SELECT * FROM documents WHERE id = ?', [docId]);
+    if (!document) {
+      return res.redirect('/workspaces');
+    }
+
+    // Verify user belongs to workspace
+    const link = await query.get(
+      'SELECT * FROM user_workspaces WHERE user_id = ? AND workspace_id = ?',
+      [req.user.id, document.workspace_id]
+    );
+    if (!link) {
+      return res.redirect('/workspaces');
+    }
+
+    // Determine document type for ONLYOFFICE
+    // "word" for text documents (.docx)
+    // "cell" for spreadsheets (.xlsx)
+    // "slide" for presentations (.pptx)
+    let documentType = 'word';
+    if (document.file_type === 'xlsx') documentType = 'cell';
+    if (document.file_type === 'pptx') documentType = 'slide';
+
+    // Unique key for ONLYOFFICE to identify the file version.
+    // If the key changes, ONLYOFFICE reloads the file.
+    // We combine the doc ID and the timestamp of last modification.
+    const key = `${docId}_${new Date(document.last_modified).getTime()}`;
+
+    // Base URL of our webapp for Document Server to download files and send callbacks
+    const webappUrl = process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
+
+    // ONLYOFFICE editor configuration object
+    const editorConfig = {
+      document: {
+        fileType: document.file_type,
+        key: key,
+        title: document.filename,
+        url: `${webappUrl}/api/download/${docId}`,
+        permissions: {
+          edit: true,
+          download: true,
+          print: true
+        }
+      },
+      documentType: documentType,
+      editorConfig: {
+        callbackUrl: `${webappUrl}/api/callback/${docId}`,
+        user: {
+          id: req.user.id.toString(),
+          name: req.user.name
+        },
+        mode: 'edit',
+        customization: {
+          about: false,
+          feedback: false,
+          chat: true,
+          forcesave: false // We can enable force save if desired
+        }
+      }
+    };
+
+    // Sign configuration with ONLYOFFICE JWT Secret
+    // ONLYOFFICE expects the entire config to be signed in a token
+    const token = jwt.sign(editorConfig, process.env.JWT_SECRET, { algorithm: 'HS256' });
+    editorConfig.token = token;
+
+    res.render('editor', {
+      config: editorConfig,
+      docServerUrl: process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost',
+      document
+    });
+  } catch (err) {
+    console.error('Error loading editor:', err);
+    res.redirect('/workspaces');
+  }
+});
+
+// GET Download file (OnlyOffice Server calls this to load the document)
+router.get('/api/download/:docId', async (req, res) => {
+  const docId = req.params.docId;
+
+  try {
+    const document = await query.get('SELECT * FROM documents WHERE id = ?', [docId]);
+    if (!document || !document.storage_path || !fs.existsSync(document.storage_path)) {
+      return res.status(404).send('File not found');
+    }
+
+    // Set headers
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(document.filename)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+
+    fs.createReadStream(document.storage_path).pipe(res);
+  } catch (err) {
+    console.error('Error downloading file:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// POST Save Callback (OnlyOffice Server calls this when saving/editing)
+router.post('/api/callback/:docId', async (req, res) => {
+  const docId = req.params.docId;
+  let body = req.body;
+
+  console.log(`Callback received for document ${docId}. Headers:`, req.headers);
+
+  // Parse JWT token from ONLYOFFICE callback if present
+  // ONLYOFFICE sends JWT either in request header: Authorization: Bearer <token>
+  // or inside request body: { token: <token> }
+  let jwtToken = body.token;
+  if (!jwtToken && req.headers['authorization']) {
+    const authHeader = req.headers['authorization'];
+    if (authHeader.startsWith('Bearer ')) {
+      jwtToken = authHeader.substring(7);
+    }
+  }
+
+  if (jwtToken) {
+    try {
+      const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET);
+      body = decoded.payload || decoded; // The payload might be wrapped under 'payload' key
+    } catch (err) {
+      console.error('Callback JWT signature validation failed:', err.message);
+      return res.status(403).send({ error: 1, message: 'Invalid JWT token' });
+    }
+  } else {
+    // If JWT is configured as required, we must reject requests without token
+    console.warn('Warning: ONLYOFFICE callback did not contain JWT token.');
+  }
+
+  console.log(`ONLYOFFICE Callback status for doc ${docId}:`, body.status);
+
+  // Status 2: Document ready for saving (after close)
+  // Status 6: Document force-saved (saving while open)
+  if (body.status === 2 || body.status === 6) {
+    const downloadUrl = body.url;
+    if (!downloadUrl) {
+      return res.status(400).send({ error: 1, message: 'Download URL missing' });
+    }
+
+    try {
+      const document = await query.get('SELECT * FROM documents WHERE id = ?', [docId]);
+      if (!document) {
+        return res.status(404).send({ error: 1, message: 'Document not found' });
+      }
+
+      console.log(`Downloading updated file from ONLYOFFICE: ${downloadUrl}`);
+
+      const response = await axios({
+        method: 'get',
+        url: downloadUrl,
+        responseType: 'stream'
+      });
+
+      const writer = fs.createWriteStream(document.storage_path);
+      response.data.pipe(writer);
+
+      await new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+      });
+
+      // Update last_modified in DB
+      await query.run(
+        'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
+        [docId]
+      );
+
+      console.log(`Document ${docId} successfully saved to storage.`);
+    } catch (err) {
+      console.error('Error saving file from ONLYOFFICE callback:', err);
+      return res.status(500).send({ error: 1, message: 'Error saving document' });
+    }
+  }
+
+  res.send({ error: 0 }); // Status 0 tells ONLYOFFICE that the callback succeeded
+});
+
+module.exports = router;

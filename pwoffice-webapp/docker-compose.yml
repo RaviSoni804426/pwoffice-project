@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pwoffice-webapp
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - JWT_SECRET=fHgyNEq46tsbOsOJXeY7dLao9bz1Bjsa
+      - DOCUMENT_SERVER_PUBLIC_URL=http://pwoffice-documentserver
+      - WEBAPP_PUBLIC_URL=http://pwoffice-webapp:3000
+      - DATABASE_FILE=/app/data/database.db
+    volumes:
+      - webapp-data:/app/data
+      - webapp-storage:/app/storage
+    depends_on:
+      - documentserver
+    restart: always
+
+  documentserver:
+    image: onlyoffice/documentserver:latest
+    container_name: pwoffice-documentserver
+    ports:
+      - "8080:80"
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=fHgyNEq46tsbOsOJXeY7dLao9bz1Bjsa
+      - JWT_HEADER=Authorization
+      - JWT_IN_BODY=true
+    volumes:
+      - documentserver-data:/var/lib/onlyoffice
+      - documentserver-log:/var/log/onlyoffice
+    restart: always
+
+volumes:
+  webapp-data:
+  webapp-storage:
+  documentserver-data:
+  documentserver-log:

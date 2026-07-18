@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+
+<div class="workspace-page">
+  <div class="page-header">
+    <h2>Your Workspaces</h2>
+    <p style="color: var(--text-secondary); margin-top: 0.25rem;">Select a workspace to manage and edit your documents.</p>
+  </div>
+
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <div class="workspace-list">
+    <% if (workspaces.length === 0) { %>
+      <div class="workspace-item" style="justify-content: center; border-style: dashed; padding: 2rem;">
+        <p style="color: var(--text-secondary);">You don't belong to any workspaces yet. Create one below!</p>
+      </div>
+    <% } else { %>
+      <% workspaces.forEach(function(workspace) { %>
+        <div class="workspace-item">
+          <div class="workspace-info">
+            <h3><%= workspace.name %></h3>
+            <p>Created on <%= new Date(workspace.created_at).toLocaleDateString() %></p>
+          </div>
+          <a href="/workspace/<%= workspace.id %>" class="btn btn-primary">Open Workspace</a>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+
+  <div class="create-workspace-box">
+    <h3>Create a New Workspace</h3>
+    <form action="/workspaces" method="POST" class="inline-form">
+      <input type="text" name="name" class="form-control" placeholder="Workspace Name (e.g., Marketing, Engineering)" required>
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

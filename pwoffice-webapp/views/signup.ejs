@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<div class="form-container">
+  <div class="form-header">
+    <h2>Create your Account</h2>
+    <p>Sign up to start organizing your documents and workspaces</p>
+  </div>
+  
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <form action="/signup" method="POST">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required autofocus>
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" class="form-control" placeholder="name@company.com" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="6">
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Create Account</button>
+    </div>
+  </form>
+  
+  <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+    Already have an account? <a href="/login">Log In</a>
+  </p>
+</div>
+
+<%- include('partials/footer') %>
