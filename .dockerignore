@@ -1,0 +1,10 @@
+# Ignore everything by default
+*
+
+# Allow only web-apps folder for build context
+!web-apps
+
+# Exclude large development/history folders inside web-apps
+web-apps/.git
+web-apps/**/node_modules
+web-apps/**/.git

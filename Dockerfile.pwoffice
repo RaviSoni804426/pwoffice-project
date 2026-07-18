@@ -1,0 +1,4 @@
+FROM onlyoffice/documentserver:latest
+
+# Copy our custom rebranded web-apps files directly into the image
+COPY web-apps /var/www/onlyoffice/documentserver/web-apps
