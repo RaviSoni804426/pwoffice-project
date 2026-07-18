@@ -251,4 +251,31 @@ router.post('/workspace/:id/delete/:docId', requireAuth, async (req, res) => {
   }
 });
 
+// POST Delete workspace
+router.post('/workspace/:id/delete', requireAuth, async (req, res) => {
+  const workspaceId = req.params.id;
+
+  try {
+    const hasAccess = await checkWorkspaceAccess(req.user.id, workspaceId);
+    if (!hasAccess) {
+      return res.redirect('/workspaces');
+    }
+
+    // Delete workspace from database.
+    // Cascade delete on foreign keys will automatically delete user links and document records.
+    await query.run('DELETE FROM workspaces WHERE id = ?', [workspaceId]);
+
+    // Delete workspace storage folder on disk
+    const workspaceDir = path.resolve(__dirname, `../storage/${workspaceId}`);
+    if (fs.existsSync(workspaceDir)) {
+      fs.rmSync(workspaceDir, { recursive: true, force: true });
+    }
+
+    res.redirect('/workspaces');
+  } catch (err) {
+    console.error('Error deleting workspace:', err);
+    res.redirect(`/workspace/${workspaceId}?error=Failed to delete workspace.`);
+  }
+});
+
 module.exports = router;

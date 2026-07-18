@@ -22,7 +22,12 @@
             <h3><%= workspace.name %></h3>
             <p>Created on <%= new Date(workspace.created_at).toLocaleDateString() %></p>
           </div>
-          <a href="/workspace/<%= workspace.id %>" class="btn btn-primary">Open Workspace</a>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="/workspace/<%= workspace.id %>" class="btn btn-primary">Open Workspace</a>
+            <form action="/workspace/<%= workspace.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this workspace? All documents inside it will be permanently deleted.');" style="display: inline-block; margin: 0;">
+              <button type="submit" class="btn btn-danger" style="padding: 0.6rem 1rem;">Delete</button>
+            </form>
+          </div>
         </div>
       <% }); %>
     <% } %>
