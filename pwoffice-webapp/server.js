@@ -18,6 +18,54 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+const helmet = require('helmet');
+const cors = require('cors');
+
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',') 
+    : [
+        'http://localhost:3000', 
+        'http://host.docker.internal:3000',
+        process.env.WEBAPP_PUBLIC_URL,
+        process.env.DOCUMENT_SERVER_PUBLIC_URL
+      ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+};
+app.use(cors(corsOptions));
+
+// Helmet Configuration for Security Headers (specifically configured for OnlyOffice compatibility)
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": [
+        "'self'", 
+        "'unsafe-inline'", 
+        "'unsafe-eval'",
+        process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost'
+      ],
+      "style-src": [
+        "'self'", 
+        "'unsafe-inline'", 
+        "https://fonts.googleapis.com"
+      ],
+      "font-src": ["'self'", "https://fonts.gstatic.com"],
+      "img-src": ["'self'", "data:", "blob:", "*"],
+      "frame-src": [
+        "'self'",
+        process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost'
+      ],
+      "connect-src": ["'self'", "*"]
+    }
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
 
