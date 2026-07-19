@@ -50,15 +50,13 @@ router.get('/workspaces', requireAuth, async (req, res) => {
 
 // POST create workspace
 router.post('/workspaces', requireAuth, async (req, res) => {
-  const { name } = req.body;
-
-  if (!name || !name.trim()) {
-    return res.redirect('/workspaces');
+  const cleanName = name.replace(/<[^>]*>/g, '').trim();
+  if (!cleanName) {
+    return res.redirect('/workspaces?error=Invalid workspace name.');
   }
 
   try {
-    // Start simple transaction-like sequence (SQLite auto-commits, but we'll do both steps)
-    const wsResult = await query.run('INSERT INTO workspaces (name) VALUES (?)', [name.trim()]);
+    const wsResult = await query.run('INSERT INTO workspaces (name) VALUES (?)', [cleanName]);
     const workspaceId = wsResult.lastID;
 
     await query.run(

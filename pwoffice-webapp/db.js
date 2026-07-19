@@ -60,9 +60,23 @@ async function initDb() {
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
+        is_verified BOOLEAN DEFAULT FALSE,
+        verification_token VARCHAR(255),
+        reset_token VARCHAR(255),
+        reset_token_expires TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Schema migration: Alter users table to add new columns if they do not exist
+    try {
+      await query.run('ALTER TABLE users ADD COLUMN IF NOT EXISTS is_verified BOOLEAN DEFAULT FALSE');
+      await query.run('ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_token VARCHAR(255)');
+      await query.run('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255)');
+      await query.run('ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP');
+    } catch (e) {
+      console.warn('Users table migration warning:', e.message);
+    }
 
     // Create Workspaces Table
     await query.run(`
@@ -99,6 +113,17 @@ async function initDb() {
         FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
+
+    // Create token_blacklist Table
+    await query.run(`
+      CREATE TABLE IF NOT EXISTS token_blacklist (
+        token_hash VARCHAR(64) PRIMARY KEY,
+        expires_at TIMESTAMP NOT NULL
+      )
+    `);
+
+    // Clean up expired tokens on startup
+    await query.run('DELETE FROM token_blacklist WHERE expires_at < CURRENT_TIMESTAMP');
 
     // Create Performance Indexes
     await query.run(`CREATE INDEX IF NOT EXISTS idx_documents_workspace_id ON documents(workspace_id)`);

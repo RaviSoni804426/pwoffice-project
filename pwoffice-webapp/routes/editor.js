@@ -42,13 +42,20 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     // Base URL of our webapp for Document Server to download files and send callbacks
     const webappUrl = process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
 
+    // Generate a temporary download token to secure direct file access
+    const downloadToken = jwt.sign(
+      { docId: docId, userId: req.user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '5m' }
+    );
+
     // ONLYOFFICE editor configuration object
     const editorConfig = {
       document: {
         fileType: document.file_type,
         key: key,
         title: document.filename,
-        url: `${webappUrl}/api/download/${docId}`,
+        url: `${webappUrl}/api/download/${docId}?token=${downloadToken}`,
         permissions: {
           edit: true,
           download: true,
@@ -91,6 +98,20 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
 // GET Download file (OnlyOffice Server calls this to load the document)
 router.get('/api/download/:docId', async (req, res) => {
   const docId = req.params.docId;
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(403).send('Forbidden: Access token required');
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.docId !== docId) {
+      return res.status(403).send('Forbidden: Token mismatch');
+    }
+  } catch (err) {
+    return res.status(403).send('Forbidden: Invalid or expired token');
+  }
 
   try {
     const document = await query.get('SELECT * FROM documents WHERE id = ?', [docId]);

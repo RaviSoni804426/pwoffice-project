@@ -21,15 +21,22 @@ app.use(cookieParser());
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
 
+const { isTokenBlacklisted } = require('./middleware/auth');
+
 // Global Middleware to load user from JWT cookie if it exists
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   const token = req.cookies.auth_token;
   if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
-      res.locals.user = decoded;
-    } catch (err) {
+    const blacklisted = await isTokenBlacklisted(token);
+    if (!blacklisted) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        res.locals.user = decoded;
+      } catch (err) {
+        res.clearCookie('auth_token');
+      }
+    } else {
       res.clearCookie('auth_token');
     }
   }
