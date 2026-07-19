@@ -7,6 +7,19 @@ const axios = require('axios');
 const { query } = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
+// Helper for download retry logic on external ONLYOFFICE callback url
+async function getWithRetry(url, options, retries = 3, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await axios({ url, ...options });
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`Transient fetch failure on ${url}, retrying in ${delay}ms... (Attempt ${i + 1}/${retries})`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
 // GET Editor Page
 router.get('/editor/:docId', requireAuth, async (req, res) => {
   const docId = req.params.docId;
@@ -179,9 +192,8 @@ router.post('/api/callback/:docId', async (req, res) => {
 
       console.log(`Downloading updated file from ONLYOFFICE: ${downloadUrl}`);
 
-      const response = await axios({
+      const response = await getWithRetry(downloadUrl, {
         method: 'get',
-        url: downloadUrl,
         responseType: 'stream'
       });
 

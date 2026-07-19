@@ -20,7 +20,12 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '_' + file.originalname);
   }
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50MB limit
+  }
+});
 
 // Helper to check if user has access to a workspace
 async function checkWorkspaceAccess(userId, workspaceId) {
@@ -158,7 +163,17 @@ router.post('/workspace/:id/create', requireAuth, async (req, res) => {
 });
 
 // POST Upload document
-router.post('/workspace/:id/upload', requireAuth, upload.single('file'), async (req, res) => {
+router.post('/workspace/:id/upload', requireAuth, (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+        return res.redirect(`/workspace/${req.params.id}?error=File size exceeds the 50MB limit.`);
+      }
+      return res.redirect(`/workspace/${req.params.id}?error=Failed to upload file: ${err.message}`);
+    }
+    next();
+  });
+}, async (req, res) => {
   const workspaceId = req.params.id;
 
   if (!req.file) {
@@ -175,12 +190,19 @@ router.post('/workspace/:id/upload', requireAuth, upload.single('file'), async (
 
     const originalName = req.file.originalname;
     const ext = path.extname(originalName).toLowerCase().replace('.', '');
-    const allowedTypes = ['docx', 'xlsx', 'pptx'];
+    const allowedExtensions = ['docx', 'xlsx', 'pptx'];
+    const allowedMimeTypes = [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/zip',
+      'application/octet-stream'
+    ];
 
-    if (!allowedTypes.includes(ext)) {
+    if (!allowedExtensions.includes(ext) || !allowedMimeTypes.includes(req.file.mimetype)) {
       // Clean temp file
       if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-      return res.redirect(`/workspace/${workspaceId}?error=Only .docx, .xlsx, and .pptx files are supported.`);
+      return res.redirect(`/workspace/${workspaceId}?error=Invalid file type. Only .docx, .xlsx, and .pptx files are supported.`);
     }
 
     // Insert record
