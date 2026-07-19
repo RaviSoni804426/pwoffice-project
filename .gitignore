@@ -13,6 +13,9 @@ jspm_packages/
 *.sqlite
 *.sqlite3
 
+# Backups
+backups/
+
 # Logs
 logs
 *.log

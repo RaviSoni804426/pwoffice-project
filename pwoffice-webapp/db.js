@@ -1,85 +1,79 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const fs = require('fs');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-const dbPath = path.resolve(__dirname, process.env.DATABASE_FILE || './database.db');
-
-// Ensure database directory exists
-const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error opening database:', err.message);
-  } else {
-    console.log('Connected to SQLite database at:', dbPath);
-    db.run('PRAGMA foreign_keys = ON;', (err) => {
-      if (err) console.error('Failed to enable foreign keys:', err.message);
-    });
-    db.run('PRAGMA journal_mode = WAL;', (err) => {
-      if (err) console.error('Failed to set WAL journal mode:', err.message);
-    });
-    db.run('PRAGMA synchronous = NORMAL;', (err) => {
-      if (err) console.error('Failed to set synchronous normal:', err.message);
-    });
-  }
+// PostgreSQL Connection Pool Setup
+const pool = new Pool({
+  host: process.env.PGHOST || 'localhost',
+  port: parseInt(process.env.PGPORT || '5432'),
+  user: process.env.PGUSER || 'pwadmin',
+  password: process.env.PGPASSWORD || 'pwpass',
+  database: process.env.PGDATABASE || 'pwoffice',
+  max: 20, // Connection pool limit
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
-// Helper functions wrapping sqlite3 callbacks in Promises
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle PostgreSQL client', err);
+});
+
+// Helper to translate SQLite style '?' placeholders to PostgreSQL '$1', '$2', ...
+function translatePlaceholders(sql) {
+  let index = 1;
+  return sql.replace(/\?/g, () => `$${index++}`);
+}
+
+// Wrapper to mirror SQLite query runner interface (run, get, all)
 const query = {
-  run(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.run(sql, params, function (err) {
-        if (err) reject(err);
-        else resolve({ lastID: this.lastID, changes: this.changes });
-      });
-    });
+  async run(sql, params = []) {
+    let pgSql = translatePlaceholders(sql);
+    const isInsert = pgSql.trim().toUpperCase().startsWith('INSERT INTO');
+    if (isInsert && !pgSql.toUpperCase().includes('RETURNING')) {
+      pgSql += ' RETURNING id';
+    }
+    const res = await pool.query(pgSql, params);
+    let lastID = null;
+    if (isInsert && res.rows && res.rows[0]) {
+      lastID = res.rows[0].id;
+    }
+    return { lastID, changes: res.rowCount };
   },
-  get(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.get(sql, params, (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      });
-    });
+  async get(sql, params = []) {
+    const pgSql = translatePlaceholders(sql);
+    const res = await pool.query(pgSql, params);
+    return res.rows[0] || null;
   },
-  all(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+  async all(sql, params = []) {
+    const pgSql = translatePlaceholders(sql);
+    const res = await pool.query(pgSql, params);
+    return res.rows;
   }
 };
 
-// Initialize database schema
+// Initialize PostgreSQL database schema & indexes
 async function initDb() {
   try {
     // Create Users Table
     await query.run(`
       CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
     // Create Workspaces Table
     await query.run(`
       CREATE TABLE IF NOT EXISTS workspaces (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
-    // Create User-Workspace Many-to-Many Link Table
+    // Create User-Workspace Link Table
     await query.run(`
       CREATE TABLE IF NOT EXISTS user_workspaces (
         user_id INTEGER,
@@ -93,33 +87,34 @@ async function initDb() {
     // Create Documents Table
     await query.run(`
       CREATE TABLE IF NOT EXISTS documents (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        filename TEXT NOT NULL,
+        id SERIAL PRIMARY KEY,
+        filename VARCHAR(255) NOT NULL,
         workspace_id INTEGER NOT NULL,
         owner_id INTEGER NOT NULL,
-        file_type TEXT NOT NULL,
-        storage_path TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        last_modified DATETIME DEFAULT CURRENT_TIMESTAMP,
+        file_type VARCHAR(50) NOT NULL,
+        storage_path VARCHAR(500) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
         FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
 
-    // Create indexes for performance
+    // Create Performance Indexes
     await query.run(`CREATE INDEX IF NOT EXISTS idx_documents_workspace_id ON documents(workspace_id)`);
     await query.run(`CREATE INDEX IF NOT EXISTS idx_documents_owner_id ON documents(owner_id)`);
     await query.run(`CREATE INDEX IF NOT EXISTS idx_user_workspaces_user_id ON user_workspaces(user_id)`);
 
-    console.log('Database tables initialized successfully.');
+    console.log('PostgreSQL database tables and indexes initialized successfully.');
   } catch (err) {
-    console.error('Error initializing database tables:', err);
+    console.error('Error initializing PostgreSQL tables:', err);
     process.exit(1);
   }
 }
 
 module.exports = {
-  db,
+  db: null, // Mocked direct DB handle
+  pool,
   query,
   initDb
 };
