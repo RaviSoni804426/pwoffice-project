@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<div class="form-container" style="max-width: 800px; margin: 4rem auto; padding: 3rem 2rem;">
+  <div class="form-header" style="margin-bottom: 2.5rem; text-align: left;">
+    <h2 style="font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Privacy Policy</h2>
+    <p>Last updated: July 19, 2026</p>
+  </div>
+  
+  <div style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+    <section style="margin-bottom: 2rem;">
+      <h3 style="color: var(--text-primary); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem;">1. Information We Collect</h3>
+      <p>We collect information that you provide directly to us when creating an account or updating your profile. This includes:</p>
+      <ul style="padding-left: 1.5rem; margin-top: 0.5rem; list-style-type: disc;">
+        <li>Personal identifier data: Name, email address, and hashed passwords.</li>
+        <li>User-generated content: All documents, spreadsheets, and presentation files uploaded or created inside your workspaces.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h3 style="color: var(--text-primary); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem;">2. How We Store and Protect Your Data</h3>
+      <p>Your privacy and document security are our highest priorities:</p>
+      <ul style="padding-left: 1.5rem; margin-top: 0.5rem; list-style-type: disc;">
+        <li>All uploaded documents are stored securely on persistent host storage volumes.</li>
+        <li>Access control is strictly validated via JWT tokens on every file request. Only users explicitly members of a workspace can fetch or edit files in that workspace.</li>
+        <li>Database credentials and secrets are configured via secure environment variables.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h3 style="color: var(--text-primary); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem;">3. Data Retention and Deletion</h3>
+      <p>We respect your right to control your data. Workspaces can be deleted by administrators or owners at any time. When you request deletion of a workspace or document, all associated database records and actual files on disk are immediately and permanently erased.</p>
+    </section>
+
+    <section style="margin-bottom: 2rem;">
+      <h3 style="color: var(--text-primary); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.75rem;">4. Third-Party Integrations</h3>
+      <p>Our document editing suite runs on self-hosted instances of ONLYOFFICE Document Server. No data is shared with external OnlyOffice services. The chatbot feature integrates with Groq APIs using secure API tokens, and your chat queries are transiently processed to generate helper responses.</p>
+    </section>
+  </div>
+  
+  <div style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 2rem; text-align: center;">
+    <a href="/" class="btn btn-primary" style="text-decoration: none;">Return to Home</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

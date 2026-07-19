@@ -159,6 +159,16 @@ app.get('/', (req, res) => {
   res.render('landing');
 });
 
+// Privacy Policy Route
+app.get('/privacy', (req, res) => {
+  res.render('privacy');
+});
+
+// Terms of Service Route
+app.get('/terms', (req, res) => {
+  res.render('terms');
+});
+
 // 404 Route
 app.use((req, res) => {
   res.status(404).render('error', {

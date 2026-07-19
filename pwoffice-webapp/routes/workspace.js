@@ -55,7 +55,8 @@ router.get('/workspaces', requireAuth, async (req, res) => {
 
 // POST create workspace
 router.post('/workspaces', requireAuth, async (req, res) => {
-  const cleanName = name.replace(/<[^>]*>/g, '').trim();
+  const { name } = req.body;
+  const cleanName = (name || '').replace(/<[^>]*>/g, '').trim();
   if (!cleanName) {
     return res.redirect('/workspaces?error=Invalid workspace name.');
   }

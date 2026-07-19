@@ -1,312 +1,506 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PW Office - Premium Private Collaborative Suite</title>
+  <!-- Global App CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Premium Landing Page CSS -->
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body class="lp-body">
 
-<!-- Hero Section -->
-<section class="hero-container">
-  <div class="hero-content">
-    <div class="announcement-badge">
-      <span class="badge-tag">NEW</span>
-      <span class="badge-text">Groq Llama 3.3 Assistant now integrated</span>
-    </div>
-    <h1 class="hero-headline">Run your private workspace with <span>PW Office</span></h1>
-    <p class="hero-subheading">A powerful, secure office suite for document editing, spreadsheet analysis, and slide presentations. Experience real-time collaboration with your team, hosted entirely under your control.</p>
-    <div class="hero-cta-group">
-      <% if (locals.user) { %>
-        <a href="/workspaces" class="btn btn-primary btn-large">Go to Workspaces</a>
-      <% } else { %>
-        <a href="/signup" class="btn btn-primary btn-large">Get Started Now</a>
-        <a href="/login" class="btn btn-secondary btn-large">Sign In</a>
-      <% } %>
-    </div>
+  <!-- 1. TOP ANNOUNCEMENT BANNER -->
+  <div class="announce-banner" id="announceBanner">
+    <span>🚀 PW Office Workspace is now live — deploy your private office and start collaborating.</span>
+    <% if (!locals.user) { %>
+      <a href="/signup">Create Free Account &rarr;</a>
+    <% } else { %>
+      <a href="/workspaces">Go to Dashboard &rarr;</a>
+    <% } %>
+    <button class="announce-close-btn" onclick="dismissBanner()">&times;</button>
   </div>
-  
-  <!-- CSS Mockup of the Editor UI -->
-  <div class="hero-mockup-container">
-    <div class="mockup-window">
-      <div class="mockup-titlebar">
-        <div class="mockup-dots">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-        </div>
-        <div class="mockup-tab active">📄 Project_Proposal.docx</div>
-        <div class="mockup-tab">📊 Q4_Budget.xlsx</div>
+
+  <!-- 2. NAVIGATION BAR -->
+  <header class="lp-header" id="lpHeader">
+    <div class="lp-nav-container">
+      <a href="/" class="logo-link">
+        <img src="/images/pw-logo.png" alt="PW Office Logo" class="logo-img">
+        <span class="logo-text">PW Office</span>
+      </a>
+      <nav>
+        <ul class="lp-menu">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#collaboration">Collaboration</a></li>
+          <li><a href="#ai">AI Engine</a></li>
+          <li><a href="#security">Security</a></li>
+        </ul>
+      </nav>
+      <div class="lp-right-actions">
+        <!-- Language dropdown selector -->
+        <select class="lang-selector">
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+          <option value="de">DE</option>
+        </select>
+        <% if (locals.user) { %>
+          <a href="/workspaces" class="lp-btn-secondary">Dashboard</a>
+          <a href="/logout" class="lp-btn-primary">Logout</a>
+        <% } else { %>
+          <a href="/login" class="lp-btn-secondary">Log In</a>
+          <a href="/signup" class="lp-btn-primary">Sign Up</a>
+        <% } %>
       </div>
-      <div class="mockup-toolbar">
-        <span class="toolbar-item font-select">Inter</span>
-        <span class="toolbar-item">11pt</span>
-        <span class="toolbar-item bold">B</span>
-        <span class="toolbar-item italic">I</span>
-        <span class="toolbar-item underline">U</span>
-        <span class="toolbar-item alignment">≡</span>
-        <span class="toolbar-item spacer"></span>
-        <span class="toolbar-item save-status">✓ Saved</span>
-      </div>
-      <div class="mockup-editor-body">
-        <div class="mockup-sidebar">
-          <div class="sidebar-item active">📄 Outline</div>
-          <div class="sidebar-item">💬 Comments</div>
-          <div class="sidebar-item">🔍 Search</div>
-          <div class="sidebar-item">🤖 Assistant</div>
+    </div>
+  </header>
+
+  <!-- 3. HERO SECTION -->
+  <section class="lp-hero">
+    <div class="hero-reveal-mask">
+      <h1 class="lp-headline">Run your private workspace<br>with <span>PW Office</span></h1>
+    </div>
+    <p class="hero-sub">
+      A premium, self-hosted office suite for document editing, spreadsheet modeling, and rich presentations. Experience lag-free co-editing and absolute privacy.
+    </p>
+    <div class="hero-ctas">
+      <% if (locals.user) { %>
+        <a href="/workspaces" class="btn btn-hero-primary">Enter Workspaces</a>
+      <% } else { %>
+        <a href="/signup" class="btn btn-hero-primary">Get Started Free</a>
+      <% } %>
+      <a href="#features" class="btn btn-hero-secondary">See Features</a>
+    </div>
+    
+    <!-- Hero Mockup Window -->
+    <div class="hero-mockup-wrapper">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <div class="mockup-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="mockup-tab active">📄 Proposal_Draft.docx</div>
         </div>
-        <div class="mockup-canvas">
-          <div class="mockup-page">
-            <h2 style="color:#ffffff; margin-bottom: 1rem; font-size: 1.5rem;">PW Office Project Scope</h2>
-            <p style="color:#d1d5db; margin-bottom: 0.75rem;">This document outlines the deployment of the PW Office collaboration system. By utilizing secure document servers and a robust SQL workspace controller, PW Office empowers teams to edit files concurrently with zero friction.</p>
-            <p style="color:#9ca3af; line-height: 1.6;">Our architecture ensures absolute data sovereignty while maintaining maximum document compatibility.</p>
-            <div class="mockup-cursor" style="top: 140px; left: 160px;">
-              <span class="cursor-pointer"></span>
-              <span class="cursor-label">Sarah (Co-Author)</span>
+        <div class="mockup-toolbar">
+          <span class="toolbar-item font-select">Outfit</span>
+          <span class="toolbar-item">12pt</span>
+          <span class="toolbar-item bold">B</span>
+          <span class="toolbar-item italic">I</span>
+          <span class="toolbar-item underline">U</span>
+          <span class="toolbar-item alignment">≡</span>
+          <span class="toolbar-item spacer"></span>
+          <span class="toolbar-item save-status">✓ Auto-Saved</span>
+        </div>
+        <div class="mockup-editor-body">
+          <div class="mockup-sidebar">
+            <div class="sidebar-item active">Outline</div>
+            <div class="sidebar-item">Comments</div>
+            <div class="sidebar-item">AI Assistant</div>
+          </div>
+          <div class="mockup-canvas">
+            <div class="mockup-page">
+              <h2 style="color: #fff; margin-bottom: 0.75rem; font-size: 1.35rem;">PW Office Roadmap</h2>
+              <p style="color: #cbd5e1; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                This project represents a fully secure, self-hosted office configuration. By integrating containerized Document Servers, teams can perform concurrent modifications without leaving the local boundaries.
+              </p>
+              <p style="color: #94a3b8; font-size: 0.9rem;">
+                Absolute document compatibility with standard file formats ensures seamless imports and exports.
+              </p>
+              <div class="mockup-cursor" style="top: 130px; left: 190px;">
+                <span class="cursor-pointer"></span>
+                <span class="cursor-label">Priya (Editing)</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Feature Alternating Sections -->
-<section id="features" class="section-divider">
-  <div class="section-title-wrapper">
-    <h2 class="section-main-title">A complete suite for all your document needs</h2>
-    <p class="section-subtitle">No conversion errors, no document distortion. PW Office supports all major formats with flawless fidelity.</p>
-  </div>
-
-  <!-- Feature 1: Powerful Editors -->
-  <div class="alternating-feature">
-    <div class="feature-text-block">
-      <span class="feature-tag">DOCUMENT EDITING</span>
-      <h3>Advanced formatting and rich editing tools</h3>
-      <p>Whether writing letters, compiling reports, or preparing manuscripts, PW Office provides full page geometry options, header/footer controls, footnotes, table of contents generator, and custom style formats.</p>
-      <ul class="feature-bullets">
-        <li>Complete DOCX, XLSX, and PPTX compatibility.</li>
-        <li>Advanced tables, equations, and shapes.</li>
-        <li>Built-in PDF reader and exporter.</li>
-      </ul>
+  <!-- 4. FEATURES SECTION — "PW Office Docs" (6-card grid) -->
+  <section class="lp-section" id="features">
+    <div class="lp-section-header">
+      <h2 class="lp-title">PW Office Docs, the complete office suite</h2>
+      <p>Powerful editors fully compatible with DOCX, XLSX, and PPTX. Work with documents of any complexity.</p>
     </div>
-    <div class="feature-visual-block">
-      <div class="grid-showcase">
-        <div class="showcase-card">
-          <span class="showcase-icon" style="color: #60a5fa;">📄</span>
-          <h4>Word Processor</h4>
-          <p>Format documents with advanced spacing, styling, margins, and section breaks.</p>
-        </div>
-        <div class="showcase-card">
-          <span class="showcase-icon" style="color: #34d399;">📊</span>
-          <h4>Spreadsheet Tool</h4>
-          <p>Analyze data with 400+ math functions, pivot tables, graphs, and formatting options.</p>
-        </div>
-        <div class="showcase-card">
-          <span class="showcase-icon" style="color: #fbbf24;">📽️</span>
-          <h4>Slide Presenter</h4>
-          <p>Present ideas with beautiful layouts, templates, gradients, and custom slide animations.</p>
+    
+    <div class="cards-grid-6">
+      <div class="lp-card">
+        <span class="card-icon">📄</span>
+        <h3>View & Edit Documents</h3>
+        <p>Advanced typography and text formatting, headers and footers, and complex table designs.</p>
+      </div>
+      <div class="lp-card">
+        <span class="card-icon">📊</span>
+        <h3>Spreadsheet Modeling</h3>
+        <p>Analyze tabular statistics with over 400 formulas, interactive charts, and pivot tables.</p>
+      </div>
+      <div class="lp-card">
+        <span class="card-icon">📽️</span>
+        <h3>Slide Presentations</h3>
+        <p>Design stunning slides with dynamic animations, transition elements, and rich audio/video inserts.</p>
+      </div>
+      <div class="lp-card">
+        <span class="card-icon">📝</span>
+        <h3>Build PDF Forms</h3>
+        <p>Design fillable forms with fields, checkboxes, dropdowns, and export them as standard PDF documents.</p>
+      </div>
+      <div class="lp-card">
+        <span class="card-icon">🔄</span>
+        <h3>Markdown Conversion</h3>
+        <p>Read, write, and export Markdown formatting directly inside the workspace editor.</p>
+      </div>
+      <div class="lp-card">
+        <span class="card-icon">📚</span>
+        <h3>E-Book Support</h3>
+        <p>Save and read your collaborative documents in standard e-pub and FB2 formats.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FEATURES SECTION — "Collaboration" (6-card grid) -->
+  <section class="lp-section" id="collaboration">
+    <div class="lp-section-header">
+      <h2 class="lp-title">Designed to make collaboration seamless</h2>
+      <p>Work on sheets and documents synchronously with co-authors using rich review features.</p>
+    </div>
+    
+    <div class="collab-grid">
+      <div class="collab-card odd">
+        <span class="card-icon">⚡</span>
+        <h3>Co-Editing Modes</h3>
+        <p>Choose between Fast mode (instant typing updates) and Strict mode (locks paragraphs while editing).</p>
+      </div>
+      <div class="collab-card even">
+        <span class="card-icon">✏️</span>
+        <h3>Track Changes</h3>
+        <p>Propose edits, review changes, and accept or reject inputs with full author transparency.</p>
+      </div>
+      <div class="collab-card odd">
+        <span class="card-icon">🤖</span>
+        <h3>Built-in AI Chat</h3>
+        <p>Leverage the integrated Groq assistant directly inside the document editor to write formulas or edit texts.</p>
+      </div>
+      <div class="collab-card even">
+        <span class="card-icon">💬</span>
+        <h3>Comments & Mentions</h3>
+        <p>Leave paragraph-level feedback, mention team members, and resolve discussions in threads.</p>
+      </div>
+      <div class="collab-card odd">
+        <span class="card-icon">⏳</span>
+        <h3>Version History</h3>
+        <p>Inspect previous modifications, compare versions, and restore documents to any historical state.</p>
+      </div>
+      <div class="collab-card even">
+        <span class="card-icon">👥</span>
+        <h3>Real-time Presence</h3>
+        <p>See exactly who is online and track individual cursor positions with live user tags.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FEATURES SECTION — "AI Integration" -->
+  <section class="lp-section" id="ai">
+    <div class="lp-section-header">
+      <h2 class="lp-title">Enhanced with AI assistance</h2>
+      <p>Real AI assistance built directly into the PW Office workspace editor.</p>
+    </div>
+    
+    <div class="ai-showcase-grid">
+      <div class="ai-card">
+        <span class="ai-card-icon">🔮</span>
+        <h3>Groq Llama 3.3 Assistant</h3>
+        <p style="margin-bottom: 1rem;">
+          Our chatbot sits right alongside your editor. Ask it to explain complex formulas (like VLOOKUP, pivot rules), fix formatting issues, write copy, or debug functions.
+        </p>
+        <p>
+          Configured to be fast and private, utilizing local Groq completions so your team has instant, secure support.
+        </p>
+      </div>
+      
+      <div style="padding-left: 2rem;">
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 1rem;">Real formulas, answered instantly</h3>
+        <p style="margin-bottom: 1.5rem;">
+          Ask questions like <em>"How do I write a formula to sum column B if column A equals 'Yes'?"</em> and get a monospace-formatted, structured response in seconds.
+        </p>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--lp-border); border-radius: 8px; padding: 1rem;">
+          <code style="color: #38bdf8; font-family: monospace;">=SUMIF(A:A, "Yes", B:B)</code>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Feature 2: Collaboration -->
-  <div class="alternating-feature reverse">
-    <div class="feature-text-block">
-      <span class="feature-tag" style="color:#a78bfa; border-color: rgba(167, 139, 250, 0.2);">REAL-TIME COLLABORATION</span>
-      <h3>Work together synchronously on the same document</h3>
-      <p>PW Office offers two co-editing modes: **Fast** (re-authoring with real-time character-by-character updates) and **Strict** (locking a paragraph while you work, saving it when you are ready). Work together with absolute trust.</p>
-      <ul class="feature-bullets">
-        <li>Real-time concurrent text editing and cell calculation.</li>
-        <li>Comments, mentions, and built-in text chat.</li>
-        <li>Comprehensive revision history to roll back changes anytime.</li>
-      </ul>
+  <!-- 7. FEATURES SECTION — "Security" -->
+  <section class="lp-section" id="security">
+    <div class="lp-section-header">
+      <h2 class="lp-title">Security first</h2>
+      <p>Self-hosted controls ensure your confidential files are never exposed to external actors.</p>
     </div>
-    <div class="feature-visual-block">
-      <div class="collaboration-visual">
-        <div class="active-user-tag"><span class="status-dot online"></span> Rahul (Editing Page 1)</div>
-        <div class="active-user-tag"><span class="status-dot editing"></span> Priya (Modifying Cell C12)</div>
-        <div class="active-user-tag"><span class="status-dot online"></span> Amit (Reviewing Presentation)</div>
-        <div class="history-log">
-          <div class="log-item">✓ Q4_Budget.xlsx updated by Priya (2m ago)</div>
-          <div class="log-item">💬 "Please check column D" comment added by Amit</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing Section -->
-<section id="pricing" class="section-divider">
-  <div class="section-title-wrapper">
-    <h2 class="section-main-title">Flexible options for teams of all sizes</h2>
-    <p class="section-subtitle">Secure, private, self-hosted deployment. Choose the setup that fits your security requirements.</p>
-  </div>
-  
-  <div class="pricing-cards-grid">
-    <div class="pricing-card">
-      <h3>Community Plan</h3>
-      <p class="price">$0<span> / forever</span></p>
-      <p class="pricing-desc">Perfect for individual users and home labs seeking secure private office capabilities.</p>
-      <ul class="pricing-features">
-        <li>✓ Full online editing suite</li>
-        <li>✓ Real-time collaboration</li>
-        <li>✓ Single-user workspace manager</li>
-        <li>✓ SQLite local database</li>
-      </ul>
-      <a href="/signup" class="btn btn-secondary" style="width: 100%; margin-top: auto;">Get Started</a>
-    </div>
-
-    <div class="pricing-card featured">
-      <div class="card-featured-label">RECOMMENDED</div>
-      <h3>Team Server</h3>
-      <p class="price">$19<span> / month</span></p>
-      <p class="pricing-desc">For small and medium teams requiring centralized document sharing, auth controls, and workspace silos.</p>
-      <ul class="pricing-features">
-        <li>✓ Everything in Community Plan</li>
-        <li>✓ Unlimited Workspace Containers</li>
-        <li>✓ Multi-user collaboration & JWT tokens</li>
-        <li>✓ Shared document libraries</li>
-        <li>✓ Groq AI Assistant Integration</li>
-      </ul>
-      <a href="/signup" class="btn btn-primary" style="width: 100%; margin-top: auto;">Start Free Trial</a>
-    </div>
-  </div>
-</section>
-
-<!-- Floating Chatbot Widget -->
-<div class="chat-widget-wrapper">
-  <!-- Trigger Button -->
-  <button class="chat-trigger-btn" onclick="toggleChatWindow()">
-    <span class="chat-icon">💬</span>
-    <span class="chat-unread-dot"></span>
-  </button>
-  
-  <!-- Chat Window -->
-  <div class="chat-window-box" id="chatWindow">
-    <div class="chat-window-header">
-      <div class="chat-agent-info">
-        <span class="chat-agent-avatar">🤖</span>
+    
+    <div class="security-list">
+      <div class="security-item">
+        <svg class="check-svg" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
         <div>
-          <h4>PW Office Assistant</h4>
-          <span style="font-size: 0.75rem; color: #34d399; font-weight: 500;">Online • Powered by Groq</span>
+          <h3>Secure JWT-Based Access</h3>
+          <p>The editor integration is signed with HS256 tokens to prevent unauthorized document tampering.</p>
         </div>
       </div>
-      <button class="chat-close-btn" onclick="toggleChatWindow()">&times;</button>
-    </div>
-    
-    <!-- Messages Container -->
-    <div class="chat-messages-container" id="chatMessages">
-      <div class="chat-bubble bot-msg">
-        <p>Hello! I'm your PW Office assistant. How can I help you today?</p>
-        <span class="chat-time">Just now</span>
+      
+      <div class="security-item">
+        <svg class="check-svg" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <div>
+          <h3>Encrypted Password Hashing</h3>
+          <p>User credentials are encrypted on the host server using robust bcryptjs hashing algorithms.</p>
+        </div>
+      </div>
+      
+      <div class="security-item">
+        <svg class="check-svg" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <div>
+          <h3>Centralized Workspace Silos</h3>
+          <p>Workspaces are logically siloed on SQLite database records to keep projects completely separate.</p>
+        </div>
       </div>
     </div>
-    
-    <!-- Quick Prompts -->
-    <div class="chat-quick-prompts">
-      <button onclick="sendQuickPrompt('What is PW Office?')">What is PW Office?</button>
-      <button onclick="sendQuickPrompt('Is it secure?')">Is it secure?</button>
-      <button onclick="sendQuickPrompt('How do I collaborate?')">How do I collaborate?</button>
+  </section>
+
+  <!-- 8. FOOTER -->
+  <footer class="lp-footer" id="lpFooter">
+    <div class="footer-columns">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#collaboration">Collaboration</a></li>
+          <li><a href="#ai">AI Engine</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/workspaces">Workspaces</a></li>
+          <li><a href="/login">Dashboard Access</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <img src="/images/pw-logo.png" alt="PW Office Logo" style="height: 48px; width: auto; margin-bottom: 1rem;">
+        <p style="font-size: 0.85rem; line-height: 1.4;">PW Office is a secure, collaborative suite built for private containerized workspaces.</p>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="currentYear">2026</span> PW Office. All rights reserved.</span>
+      <span style="color: #475569;">Private self-hosted installation</span>
+    </div>
+  </footer>
+
+  <!-- Floating Chatbot Widget (Landing Page context) -->
+  <div class="chat-widget-wrapper" style="z-index: 1002;">
+    <!-- Trigger Button -->
+    <button class="chat-trigger-btn" onclick="toggleChatWindow()">
+      <span class="chat-icon">💬</span>
+      <span class="chat-unread-dot"></span>
+    </button>
     
-    <!-- Input Box -->
-    <form class="chat-input-area" id="chatForm" onsubmit="handleChatSubmit(event)">
-      <input type="text" id="chatInput" placeholder="Ask a question..." required autocomplete="off">
-      <button type="submit" class="chat-send-btn">Send</button>
-    </form>
+    <!-- Chat Window -->
+    <div class="chat-window-box" id="chatWindow">
+      <div class="chat-window-header">
+        <div class="chat-agent-info">
+          <span class="chat-agent-avatar">🤖</span>
+          <div>
+            <h4>PW Office Guide</h4>
+            <span style="font-size: 0.75rem; color: #34d399; font-weight: 500;">Online • Groq Assistant</span>
+          </div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChatWindow()">&times;</button>
+      </div>
+      
+      <!-- Messages Container -->
+      <div class="chat-messages-container" id="chatMessages">
+        <div class="chat-bubble bot-msg">
+          <p>Hello! I am your PW Office assistant. Ask me questions about features, pricing, or workspaces!</p>
+          <span class="chat-time">Just now</span>
+        </div>
+      </div>
+      
+      <!-- Quick Prompts -->
+      <div class="chat-quick-prompts">
+        <button onclick="sendQuickPrompt('What is PW Office?')">What is PW Office?</button>
+        <button onclick="sendQuickPrompt('Is it secure?')">Is it secure?</button>
+        <button onclick="sendQuickPrompt('How do I collaborate?')">How do I collaborate?</button>
+      </div>
+      
+      <!-- Input Box -->
+      <form class="chat-input-area" id="chatForm" onsubmit="handleChatSubmit(event)">
+        <input type="text" id="chatInput" placeholder="Ask a question..." required autocomplete="off">
+        <button type="submit" class="chat-send-btn">Send</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<script>
-  let chatHistory = [];
+  <!-- INTERSECTION OBSERVER & INTERACTIVE SCRIPTS -->
+  <script>
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-  function toggleChatWindow() {
-    const chatWindow = document.getElementById('chatWindow');
-    chatWindow.classList.toggle('active');
-    
-    // Hide unread dot when opening
-    if (chatWindow.classList.contains('active')) {
-      document.querySelector('.chat-unread-dot').style.display = 'none';
-      document.getElementById('chatInput').focus();
+    // Announcement banner dismissal
+    function dismissBanner() {
+      const banner = document.getElementById('announceBanner');
+      banner.style.display = 'none';
+      // Shift nav bar up slightly if announcement is gone
+      document.getElementById('lpHeader').style.top = '0';
     }
-  }
 
-  function appendMessage(role, text) {
-    const chatMessages = document.getElementById('chatMessages');
-    const bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
-    
-    const p = document.createElement('p');
-    p.textContent = text;
-    bubble.appendChild(p);
-    
-    const timeSpan = document.createElement('span');
-    timeSpan.className = 'chat-time';
-    timeSpan.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    bubble.appendChild(timeSpan);
-    
-    chatMessages.appendChild(bubble);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function showTypingIndicator() {
-    const chatMessages = document.getElementById('chatMessages');
-    const typing = document.createElement('div');
-    typing.className = 'chat-bubble bot-msg typing-indicator';
-    typing.id = 'typingIndicator';
-    typing.innerHTML = '<p>Assistant is typing<span>.</span><span>.</span><span>.</span></p>';
-    chatMessages.appendChild(typing);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function removeTypingIndicator() {
-    const indicator = document.getElementById('typingIndicator');
-    if (indicator) {
-      indicator.remove();
-    }
-  }
-
-  function sendQuickPrompt(promptText) {
-    appendMessage('user', promptText);
-    sendMessageToBackend(promptText);
-  }
-
-  async function handleChatSubmit(event) {
-    event.preventDefault();
-    const chatInput = document.getElementById('chatInput');
-    const text = chatInput.value.trim();
-    if (!text) return;
-    
-    chatInput.value = '';
-    appendMessage('user', text);
-    await sendMessageToBackend(text);
-  }
-
-  async function sendMessageToBackend(messageText) {
-    showTypingIndicator();
-    
-    // Add user message to local history array
-    chatHistory.push({ role: 'user', content: messageText });
-    
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ messages: chatHistory })
-      });
-      
-      const data = await response.json();
-      removeTypingIndicator();
-      
-      if (data.response) {
-        appendMessage('assistant', data.response);
-        chatHistory.push({ role: 'assistant', content: data.response });
+    // Scroll listener for sticky navigation transitions
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('lpHeader');
+      if (window.scrollY > 50) {
+        header.classList.add('lp-header-scrolled'); // standard class or scrolled
+        header.classList.add('scrolled');
       } else {
-        appendMessage('assistant', 'Sorry, I received an invalid response. Please try again.');
+        header.classList.remove('scrolled');
       }
-    } catch (err) {
-      removeTypingIndicator();
-      appendMessage('assistant', 'Network error. Please make sure the server is running.');
-      console.error('Chat widget error:', err);
-    }
-  }
-</script>
+    });
 
-<%- include('partials/footer') %>
+    // Intersection Observer for scroll-triggered slide and fade animations
+    const animationObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    // Observe all animateable cards, sections, checklist items
+    document.querySelectorAll('.lp-card, .collab-card, .ai-card, .security-item, .lp-footer').forEach((el, index) => {
+      // Add odd/even helper class dynamically to collab cards if not already set
+      if (el.classList.contains('collab-card')) {
+        if (index % 2 === 0) {
+          el.classList.add('even');
+        } else {
+          el.classList.add('odd');
+        }
+      }
+      
+      // Setup transition delays dynamically using our CSS variables / stagger rules
+      const stagger = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stagger-baseline')) || 80;
+      el.style.animationDelay = `${(index % 3) * stagger}ms`;
+      
+      animationObserver.observe(el);
+    });
+
+    // Chatbot functionality
+    let chatHistory = [];
+
+    function toggleChatWindow() {
+      const chatWindow = document.getElementById('chatWindow');
+      chatWindow.classList.toggle('active');
+      
+      // Hide unread dot when opening
+      if (chatWindow.classList.contains('active')) {
+        const dot = document.querySelector('.chat-unread-dot');
+        if (dot) dot.style.display = 'none';
+        document.getElementById('chatInput').focus();
+      }
+    }
+
+    function appendMessage(role, text) {
+      const chatMessages = document.getElementById('chatMessages');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${role === 'user' ? 'user-msg' : 'bot-msg'}`;
+      
+      const p = document.createElement('p');
+      p.textContent = text;
+      bubble.appendChild(p);
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'chat-time';
+      timeSpan.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      bubble.appendChild(timeSpan);
+      
+      chatMessages.appendChild(bubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const chatMessages = document.getElementById('chatMessages');
+      const typing = document.createElement('div');
+      typing.className = 'chat-bubble bot-msg typing-indicator';
+      typing.id = 'typingIndicator';
+      typing.innerHTML = '<p>Assistant is typing<span>.</span><span>.</span><span>.</span></p>';
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) {
+        indicator.remove();
+      }
+    }
+
+    function sendQuickPrompt(promptText) {
+      appendMessage('user', promptText);
+      sendMessageToBackend(promptText);
+    }
+
+    async function handleChatSubmit(event) {
+      event.preventDefault();
+      const chatInput = document.getElementById('chatInput');
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      chatInput.value = '';
+      appendMessage('user', text);
+      await sendMessageToBackend(text);
+    }
+
+    async function sendMessageToBackend(messageText) {
+      showTypingIndicator();
+      
+      // Add user message to local history array
+      chatHistory.push({ role: 'user', content: messageText });
+      
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ messages: chatHistory })
+        });
+        
+        const data = await response.json();
+        removeTypingIndicator();
+        
+        if (data.response) {
+          appendMessage('assistant', data.response);
+          chatHistory.push({ role: 'assistant', content: data.response });
+        } else {
+          appendMessage('assistant', 'Sorry, I received an invalid response. Please try again.');
+        }
+      } catch (err) {
+        removeTypingIndicator();
+        appendMessage('assistant', 'Network error. Please make sure the server is running.');
+        console.error('Chat widget error:', err);
+      }
+    }
+  </script>
+</body>
+</html>
