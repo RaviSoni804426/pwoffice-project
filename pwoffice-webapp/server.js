@@ -113,7 +113,21 @@ app.get('/', (req, res) => {
 
 // 404 Route
 app.use((req, res) => {
-  res.status(404).render('landing', { error: 'Page not found.' });
+  res.status(404).render('error', {
+    statusCode: 404,
+    title: 'Page Not Found',
+    message: "The page you're looking for doesn't exist, has been moved, or is temporarily unavailable."
+  });
+});
+
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  res.status(err.status || 500).render('error', {
+    statusCode: err.status || 500,
+    title: 'Internal Server Error',
+    message: 'An unexpected error occurred on our server. We are looking into the issue.'
+  });
 });
 
 // Start Server after DB Init
