@@ -10,24 +10,31 @@
     <div class="alert alert-danger"><%= error %></div>
   <% } %>
 
-  <form action="/signup" method="POST">
+  <form action="/signup" method="POST" id="signupForm">
     <div class="form-group">
       <label for="name">Full Name</label>
       <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required autofocus>
+      <span class="field-error" id="nameError"></span>
     </div>
     
     <div class="form-group">
       <label for="email">Email Address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="name@company.com" required>
+      <span class="field-error" id="emailError"></span>
     </div>
     
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="6">
+      <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="8">
+      <span class="field-error" id="passwordError"></span>
+      <span class="field-hint">Minimum 8 characters</span>
     </div>
     
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Create Account</button>
+      <button type="submit" class="btn btn-primary" id="signupBtn">
+        <span class="btn-text">Create Account</span>
+        <span class="btn-loader" style="display:none;">Creating account...</span>
+      </button>
     </div>
   </form>
   
@@ -35,5 +42,41 @@
     Already have an account? <a href="/login">Log In</a>
   </p>
 </div>
+
+<script>
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+  let valid = true;
+  const name = document.getElementById('name');
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  
+  document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+  document.querySelectorAll('.form-control').forEach(el => el.classList.remove('input-error'));
+  
+  if (!name.value.trim() || name.value.trim().length < 2) {
+    document.getElementById('nameError').textContent = 'Name must be at least 2 characters.';
+    name.classList.add('input-error');
+    valid = false;
+  }
+  if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+    email.classList.add('input-error');
+    valid = false;
+  }
+  if (!password.value || password.value.length < 8) {
+    document.getElementById('passwordError').textContent = 'Password must be at least 8 characters.';
+    password.classList.add('input-error');
+    valid = false;
+  }
+  
+  if (!valid) { e.preventDefault(); return; }
+  
+  const btn = document.getElementById('signupBtn');
+  btn.querySelector('.btn-text').style.display = 'none';
+  btn.querySelector('.btn-loader').style.display = 'inline';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+});
+</script>
 
 <%- include('partials/footer') %>

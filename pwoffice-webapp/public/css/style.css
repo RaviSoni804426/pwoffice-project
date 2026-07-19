@@ -1387,3 +1387,205 @@ footer {
 .chat-send-btn:hover {
   background-color: var(--accent-hover);
 }
+
+/* ========================================
+   Inline Validation & Loading States
+   ======================================== */
+
+.field-error {
+  display: block;
+  color: #fca5a5;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  min-height: 1.1em;
+}
+
+.field-hint {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin-top: 0.3rem;
+  opacity: 0.7;
+}
+
+.form-control.input-error {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.btn-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-loader::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   Mobile Responsive Enhancements
+   ======================================== */
+
+/* 375px — Small phones */
+@media (max-width: 480px) {
+  header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .nav-links {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-links a[style] {
+    display: none;
+  }
+  
+  .logo-text {
+    font-size: 1.1rem;
+  }
+  
+  main {
+    padding: 1rem 0.75rem;
+  }
+  
+  .form-container {
+    margin: 1.5rem 0.5rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: 12px;
+  }
+  
+  .form-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .hero-headline {
+    font-size: 2rem;
+  }
+  
+  .hero-subheading {
+    font-size: 0.95rem;
+  }
+  
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-cta-group .btn {
+    width: 100%;
+  }
+  
+  .workspace-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .workspace-item .btn {
+    width: 100%;
+  }
+  
+  .inline-form {
+    flex-direction: column;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .dashboard-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+  
+  .doc-table th:nth-child(3),
+  .doc-table td:nth-child(3) {
+    display: none;
+  }
+  
+  .section-main-title {
+    font-size: 1.5rem;
+  }
+  
+  .alternating-feature {
+    gap: 2rem;
+  }
+  
+  .pricing-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .pricing-card {
+    padding: 1.5rem;
+  }
+}
+
+/* 768px — Tablets */
+@media (max-width: 768px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .hero-content {
+    align-items: center;
+  }
+  
+  .hero-headline {
+    font-size: 2.5rem;
+  }
+  
+  .mockup-window {
+    height: 280px;
+  }
+  
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+  
+  .alternating-feature,
+  .alternating-feature.reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+  }
+  
+  .pricing-cards-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .nav-user {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+

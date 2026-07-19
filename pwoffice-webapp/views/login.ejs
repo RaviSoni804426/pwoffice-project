@@ -14,25 +14,63 @@
     <div class="alert alert-success"><%= message %></div>
   <% } %>
 
-  <form action="/login" method="POST">
+  <form action="/login" method="POST" id="loginForm">
     <div class="form-group">
       <label for="email">Email Address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="name@company.com" required autofocus>
+      <span class="field-error" id="emailError"></span>
     </div>
     
     <div class="form-group">
       <label for="password">Password</label>
       <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+      <span class="field-error" id="passwordError"></span>
     </div>
     
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Sign In</button>
+      <button type="submit" class="btn btn-primary" id="loginBtn">
+        <span class="btn-text">Sign In</span>
+        <span class="btn-loader" style="display:none;">Signing in...</span>
+      </button>
     </div>
   </form>
   
-  <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+  <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem;">
+    <a href="/forgot-password" style="color: var(--text-secondary);">Forgot your password?</a>
+  </p>
+  <p style="text-align: center; margin-top: 0.75rem; font-size: 0.9rem; color: var(--text-secondary);">
     Don't have an account? <a href="/signup">Sign Up</a>
   </p>
 </div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  let valid = true;
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  
+  document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+  document.querySelectorAll('.form-control').forEach(el => el.classList.remove('input-error'));
+  
+  if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+    email.classList.add('input-error');
+    valid = false;
+  }
+  if (!password.value || password.value.length < 6) {
+    document.getElementById('passwordError').textContent = 'Password must be at least 6 characters.';
+    password.classList.add('input-error');
+    valid = false;
+  }
+  
+  if (!valid) { e.preventDefault(); return; }
+  
+  const btn = document.getElementById('loginBtn');
+  btn.querySelector('.btn-text').style.display = 'none';
+  btn.querySelector('.btn-loader').style.display = 'inline';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+});
+</script>
 
 <%- include('partials/footer') %>
