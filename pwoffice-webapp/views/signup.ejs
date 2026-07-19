@@ -30,6 +30,12 @@
       <span class="field-hint">Minimum 8 characters</span>
     </div>
     
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required>
+      <span class="field-error" id="confirmPasswordError"></span>
+    </div>
+    
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="signupBtn">
         <span class="btn-text">Create Account</span>
@@ -49,6 +55,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
   const name = document.getElementById('name');
   const email = document.getElementById('email');
   const password = document.getElementById('password');
+  const confirmPassword = document.getElementById('confirmPassword');
   
   document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
   document.querySelectorAll('.form-control').forEach(el => el.classList.remove('input-error'));
@@ -66,6 +73,11 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
   if (!password.value || password.value.length < 8) {
     document.getElementById('passwordError').textContent = 'Password must be at least 8 characters.';
     password.classList.add('input-error');
+    valid = false;
+  }
+  if (password.value !== confirmPassword.value) {
+    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+    confirmPassword.classList.add('input-error');
     valid = false;
   }
   

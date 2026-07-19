@@ -8,7 +8,7 @@
     <h1><%= workspace.name %> Dashboard</h1>
   </div>
   <div class="dashboard-actions">
-    <button class="btn btn-primary" onclick="openModal('createModal')">+ Create Document</button>
+    <button class="btn btn-primary" id="openCreateModalBtn1">+ Create Document</button>
   </div>
 </div>
 
@@ -26,7 +26,7 @@
         <div class="empty-state-icon">📂</div>
         <h3>No files in this workspace yet</h3>
         <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Create a new document or upload an existing file to get started.</p>
-        <button class="btn btn-primary" onclick="openModal('createModal')">Create First File</button>
+        <button class="btn btn-primary" id="openCreateModalBtn2">Create First File</button>
       </div>
     <% } else { %>
       <div class="table-responsive">
@@ -95,7 +95,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h3>Create New File</h3>
-      <button class="modal-close" onclick="closeModal('createModal')">&times;</button>
+      <button class="modal-close" id="closeCreateModalBtn1">&times;</button>
     </div>
     <form action="/workspace/<%= workspace.id %>/create" method="POST">
       <div class="form-group">
@@ -113,7 +113,7 @@
       </div>
       
       <div class="form-actions" style="display: flex; gap: 0.5rem;">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')" style="flex: 1;">Cancel</button>
+        <button type="button" class="btn btn-secondary" id="closeCreateModalBtn2" style="flex: 1;">Cancel</button>
         <button type="submit" class="btn btn-primary" style="flex: 1;">Create</button>
       </div>
     </form>
@@ -121,12 +121,28 @@
 </div>
 
 <script>
-  function openModal(id) {
-    document.getElementById(id).classList.add('active');
-  }
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('createModal');
+    const openBtn1 = document.getElementById('openCreateModalBtn1');
+    const openBtn2 = document.getElementById('openCreateModalBtn2');
+    const closeBtn1 = document.getElementById('closeCreateModalBtn1');
+    const closeBtn2 = document.getElementById('closeCreateModalBtn2');
+
+    const openModal = () => {
+      modal.classList.add('active');
+      const filenameInput = document.getElementById('filename');
+      if (filenameInput) filenameInput.focus();
+    };
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+    };
+
+    if (openBtn1) openBtn1.addEventListener('click', openModal);
+    if (openBtn2) openBtn2.addEventListener('click', openModal);
+    if (closeBtn1) closeBtn1.addEventListener('click', closeModal);
+    if (closeBtn2) closeBtn2.addEventListener('click', closeModal);
+  });
 </script>
 
 <%- include('partials/footer') %>

@@ -39,6 +39,23 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       return res.redirect('/workspaces');
     }
 
+    // Check if ONLYOFFICE Document Server is online
+    const docServerUrl = process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
+    let isDocServerOnline = true;
+    try {
+      await axios.get(`${docServerUrl}/healthcheck`, { timeout: 2000 });
+    } catch (err) {
+      isDocServerOnline = false;
+    }
+
+    if (!isDocServerOnline) {
+      return res.status(503).render('error', {
+        statusCode: 503,
+        title: 'Editor Temporarily Unavailable',
+        message: 'The document editing service is temporarily offline or undergoing maintenance. Your documents are safe. Please try again in a few moments.'
+      });
+    }
+
     // Determine document type for ONLYOFFICE
     // "word" for text documents (.docx)
     // "cell" for spreadsheets (.xlsx)

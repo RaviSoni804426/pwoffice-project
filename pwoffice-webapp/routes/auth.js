@@ -14,6 +14,10 @@ const authLimiter = rateLimit({
   message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    const ip = req.ip || req.connection.remoteAddress;
+    return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+  },
   handler: (req, res, next, options) => {
     res.status(options.statusCode).render(
       req.path.includes('signup') ? 'signup' : 'login',
@@ -29,9 +33,9 @@ router.get('/signup', requireNoAuth, (req, res) => {
 
 // POST Signup Action
 router.post('/signup', requireNoAuth, authLimiter, async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !confirmPassword) {
     return res.render('signup', { error: 'All fields are required.' });
   }
 
@@ -42,6 +46,10 @@ router.post('/signup', requireNoAuth, authLimiter, async (req, res) => {
 
   if (password.length < 8) {
     return res.render('signup', { error: 'Password must be at least 8 characters long.' });
+  }
+
+  if (password !== confirmPassword) {
+    return res.render('signup', { error: 'Passwords do not match.' });
   }
 
   const cleanName = name.replace(/<[^>]*>/g, '').trim();
@@ -60,21 +68,11 @@ router.post('/signup', requireNoAuth, authLimiter, async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Generate Verification Token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-
-    // Save user as unverified
+    // Save user as verified directly
     await query.run(
-      'INSERT INTO users (name, email, password_hash, is_verified, verification_token) VALUES (?, ?, ?, FALSE, ?)',
-      [cleanName, email.toLowerCase().trim(), passwordHash, verificationToken]
+      'INSERT INTO users (name, email, password_hash, is_verified, verification_token) VALUES (?, ?, ?, TRUE, NULL)',
+      [cleanName, email.toLowerCase().trim(), passwordHash]
     );
-
-    // Simulate sending verification email via server logs
-    const verifyUrl = `${req.protocol}://${req.get('host')}/verify-email?token=${verificationToken}`;
-    console.log(`\n==================================================`);
-    console.log(`[SIMULATED EMAIL] Verification email sent to: ${email}`);
-    console.log(`Verify Link: ${verifyUrl}`);
-    console.log(`==================================================\n`);
 
     res.redirect('/login?registered=true');
   } catch (err) {
@@ -113,7 +111,7 @@ router.get('/verify-email', async (req, res) => {
 router.get('/login', requireNoAuth, (req, res) => {
   let message = null;
   if (req.query.registered) {
-    message = 'Registration successful! A verification link has been printed to the server logs. Please verify to login.';
+    message = 'Registration successful! You can now log in.';
   } else if (req.query.verified) {
     message = 'Email verified successfully! You can now log in.';
   } else if (req.query.resetSuccess) {
