@@ -28,12 +28,13 @@ const query = {
   async run(sql, params = []) {
     let pgSql = translatePlaceholders(sql);
     const isInsert = pgSql.trim().toUpperCase().startsWith('INSERT INTO');
-    if (isInsert && !pgSql.toUpperCase().includes('RETURNING')) {
+    const isExcludedTable = pgSql.toUpperCase().includes('USER_WORKSPACES') || pgSql.toUpperCase().includes('TOKEN_BLACKLIST');
+    if (isInsert && !isExcludedTable && !pgSql.toUpperCase().includes('RETURNING')) {
       pgSql += ' RETURNING id';
     }
     const res = await pool.query(pgSql, params);
     let lastID = null;
-    if (isInsert && res.rows && res.rows[0]) {
+    if (isInsert && !isExcludedTable && res.rows && res.rows[0]) {
       lastID = res.rows[0].id;
     }
     return { lastID, changes: res.rowCount };
