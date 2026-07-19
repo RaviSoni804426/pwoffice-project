@@ -196,3 +196,34 @@ To restore the database from a `.sql` backup file:
 docker cp /opt/pwoffice/backups/pwoffice_backup_TIMESTAMP.sql pwoffice-postgres:/tmp/backup.sql
 docker exec -it pwoffice-postgres psql -U pwadmin -d pwoffice -f /tmp/backup.sql
 ```
+
+---
+
+## 8. Monitoring & Observability
+
+### 8.1 Uptime Monitoring
+Set up an external ping checking service (e.g., **Uptime Kuma**, **Pingdom**, or **AWS Route 53 Health Checks**) pointing to:
+`https://pwoffice.yourcompany.com/api/health`
+
+This endpoint queries database connectivity and Document Server status, returning `200 OK` (healthy) or `500 Internal Server Error` (unhealthy). Configure alerts to notify engineering (via Slack/Email/PagerDuty) if this endpoint fails.
+
+### 8.2 Container Log Rotation
+Configure the Docker daemon on the server to prevent container stdout logs from consuming all disk space.
+
+Create or edit `/etc/docker/daemon.json`:
+```json
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+```
+
+Restart Docker to apply:
+```bash
+sudo systemctl restart docker
+```
+This forces Docker to keep a maximum of 3 log files of 10MB each per container, capping the log storage footprint.
+
