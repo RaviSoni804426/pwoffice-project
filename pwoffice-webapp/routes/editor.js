@@ -67,11 +67,14 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
 
     // Unique key for ONLYOFFICE to identify the file version.
     // If the key changes, ONLYOFFICE reloads the file.
-    // We combine the doc ID and the timestamp of last modification.
-    const key = `${docId}_${new Date(document.last_modified).getTime()}`;
+    // We combine the doc ID, the timestamp of last modification, and a random string to bust cache.
+    const key = `${docId}_${new Date(document.last_modified).getTime()}_${Date.now()}`;
 
-    // Base URL of our webapp for Document Server to download files and send callbacks
-    const webappUrl = process.env.WEBAPP_INTERNAL_URL || process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
+    // URL for Document Server to download files and send callbacks
+    const webappInternalUrl = process.env.WEBAPP_INTERNAL_URL || process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
+    
+    // URL for client browser to load assets
+    const webappPublicUrl = process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
 
     // Generate a temporary download token to secure direct file access
     const downloadToken = jwt.sign(
@@ -86,7 +89,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
         fileType: document.file_type,
         key: key,
         title: document.filename,
-        url: `${webappUrl}/api/download/${docId}?token=${downloadToken}`,
+        url: `${webappInternalUrl}/api/download/${docId}?token=${downloadToken}`,
         permissions: {
           edit: true,
           download: true,
@@ -95,7 +98,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       },
       documentType: documentType,
       editorConfig: {
-        callbackUrl: `${webappUrl}/api/callback/${docId}`,
+        callbackUrl: `${webappInternalUrl}/api/callback/${docId}`,
         user: {
           id: req.user.id.toString(),
           name: req.user.name
@@ -105,7 +108,14 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
           about: false,
           feedback: false,
           chat: true,
-          forcesave: false // We can enable force save if desired
+          forcesave: false, // We can enable force save if desired
+          logo: {
+            image: `${webappPublicUrl}/images/pw-logo.png`,
+            imageLight: `${webappPublicUrl}/images/pw-logo.png`,
+            imageDark: `${webappPublicUrl}/images/pw-logo.png`,
+            imageEmbedded: `${webappPublicUrl}/images/pw-logo.png`,
+            url: webappPublicUrl
+          }
         }
       }
     };
@@ -208,9 +218,16 @@ router.post('/api/callback/:docId', async (req, res) => {
         return res.status(404).send({ error: 1, message: 'Document not found' });
       }
 
-      console.log(`Downloading updated file from ONLYOFFICE: ${downloadUrl}`);
+      let internalDownloadUrl = downloadUrl;
+      const publicUrl = process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
+      const internalUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || publicUrl;
+      if (internalUrl !== publicUrl && downloadUrl.startsWith(publicUrl)) {
+        internalDownloadUrl = downloadUrl.replace(publicUrl, internalUrl);
+      }
 
-      const response = await getWithRetry(downloadUrl, {
+      console.log(`Downloading updated file from ONLYOFFICE: ${internalDownloadUrl}`);
+
+      const response = await getWithRetry(internalDownloadUrl, {
         method: 'get',
         responseType: 'stream'
       });
