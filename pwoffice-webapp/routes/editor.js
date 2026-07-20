@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
 const { query } = require('../db');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const { requireAuth } = require('../middleware/auth');
 
 // Helper for download retry logic on external ONLYOFFICE callback url
@@ -107,13 +107,13 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
         customization: {
           about: false,
           feedback: false,
-          chat: true,
+          chat: false,
           forcesave: false, // We can enable force save if desired
           logo: {
-            image: `${webappPublicUrl}/images/pw-logo.png`,
-            imageLight: `${webappPublicUrl}/images/pw-logo.png`,
-            imageDark: `${webappPublicUrl}/images/pw-logo.png`,
-            imageEmbedded: `${webappPublicUrl}/images/pw-logo.png`,
+            image: `${webappInternalUrl}/images/pw-logo.png`,
+            imageLight: `${webappInternalUrl}/images/pw-logo.png`,
+            imageDark: `${webappInternalUrl}/images/pw-logo.png`,
+            imageEmbedded: `${webappInternalUrl}/images/pw-logo.png`,
             url: webappPublicUrl
           }
         }
