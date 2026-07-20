@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { query } = require('../db');
+const { query, dbMode } = require('../db');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -68,7 +68,13 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     // Unique key for PWOFFICE to identify the file version.
     // If the key changes, PWOFFICE reloads the file.
     // We combine the doc ID, the timestamp of last modification, and a random string to bust cache.
-    const key = `${docId}_${new Date(document.last_modified).getTime()}_${Date.now()}`;
+    let lastModifiedMs;
+    if (dbMode === 'postgres') {
+      lastModifiedMs = new Date(document.last_modified).getTime();
+    } else {
+      lastModifiedMs = document.last_modified * 1000;
+    }
+    const key = `${docId}_${lastModifiedMs}_${Date.now()}`;
 
     // URL for Document Server to download files and send callbacks
     const webappInternalUrl = process.env.WEBAPP_INTERNAL_URL || process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
@@ -115,7 +121,24 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
             imageDark: `${webappInternalUrl}/images/pw-logo.png`,
             imageEmbedded: `${webappInternalUrl}/images/pw-logo.png`,
             url: webappPublicUrl
-          }
+          },
+          customer: {
+            name: 'PW Office',
+            address: '',
+            mail: '',
+            www: ''
+          },
+          loaderLogo: `${webappInternalUrl}/images/pw-logo.png`,
+          logoImage: `${webappInternalUrl}/images/pw-logo.png`,
+          logoImageDark: `${webappInternalUrl}/images/pw-logo.png`,
+          logoImageLight: `${webappInternalUrl}/images/pw-logo.png`,
+          hideRightMenu: false,
+          hideRulers: false,
+          compactHeader: false,
+          toolbarNoTabs: false,
+          toolbarHideFileName: false,
+          autosave: true,
+          windowed: false
         }
       }
     };
@@ -241,10 +264,17 @@ router.post('/api/callback/:docId', async (req, res) => {
       });
 
       // Update last_modified in DB
-      await query.run(
-        'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
-        [docId]
-      );
+      if (dbMode === 'postgres') {
+        await query.run(
+          'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
+          [docId]
+        );
+      } else {
+        await query.run(
+          'UPDATE documents SET last_modified = ? WHERE id = ?',
+          [Math.floor(Date.now() / 1000), docId]
+        );
+      }
 
       console.log(`Document ${docId} successfully saved to storage.`);
     } catch (err) {

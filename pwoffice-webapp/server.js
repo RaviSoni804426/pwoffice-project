@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require('express'); 
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Validate critical environment variables
-const criticalEnvVars = ['JWT_SECRET', 'GROQ_API_KEY', 'PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGDATABASE'];
+const criticalEnvVars = ['JWT_SECRET', 'GROQ_API_KEY'];
 const missingEnvVars = criticalEnvVars.filter(varName => !process.env[varName]);
 if (missingEnvVars.length > 0) {
   console.error(`FATAL ERROR: Missing critical environment variables: ${missingEnvVars.join(', ')}`);
@@ -116,7 +116,7 @@ app.use('/', editorRoutes);
 app.use('/', chatRoutes);
 
 const axios = require('axios');
-const { pool } = require('./db');
+const { query, dbMode } = require('./db');
 
 // Healthcheck Endpoint
 app.get('/api/health', async (req, res) => {
@@ -129,14 +129,24 @@ app.get('/api/health', async (req, res) => {
 
   let isHealthy = true;
 
-  // 1. Check database pool connectivity
+  // 1. Check database connectivity
   try {
-    const dbRes = await pool.query('SELECT 1');
-    if (dbRes.rows) {
-      healthStatus.database.status = 'connected';
+    if (dbMode === 'postgres') {
+      const dbRes = await query.get('SELECT 1');
+      if (dbRes) {
+        healthStatus.database.status = 'connected (PostgreSQL)';
+      } else {
+        isHealthy = false;
+        healthStatus.database.status = 'disconnected';
+      }
     } else {
-      isHealthy = false;
-      healthStatus.database.status = 'disconnected';
+      const dbRes = await query.get('SELECT 1');
+      if (dbRes) {
+        healthStatus.database.status = 'connected (SQLite)';
+      } else {
+        isHealthy = false;
+        healthStatus.database.status = 'disconnected';
+      }
     }
   } catch (err) {
     isHealthy = false;

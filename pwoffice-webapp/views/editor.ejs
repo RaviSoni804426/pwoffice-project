@@ -90,6 +90,7 @@
 
     function toggleChatWindow() {
       const chatWindow = document.getElementById('chatWindow');
+      const iframeEditor = document.getElementById('iframeEditor');
       chatWindow.classList.toggle('active');
       
       // Hide unread dot when opening
@@ -97,6 +98,11 @@
         const dot = document.querySelector('.chat-unread-dot');
         if (dot) dot.style.display = 'none';
         document.getElementById('chatInput').focus();
+        // Reduce iframe pointer events when chat is open to ensure chat is clickable
+        if (iframeEditor) iframeEditor.style.pointerEvents = 'none';
+      } else {
+        // Restore iframe pointer events when chat is closed
+        if (iframeEditor) iframeEditor.style.pointerEvents = 'auto';
       }
     }
 

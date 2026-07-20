@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
-const { query } = require('../db');
+const { query, dbMode } = require('../db');
 const { requireNoAuth } = require('../middleware/auth');
 
 // Brute-force protection: max 15 auth attempts per 15 minutes
@@ -182,7 +182,12 @@ router.post('/forgot-password', requireNoAuth, authLimiter, async (req, res) => 
     const user = await query.get('SELECT id FROM users WHERE email = ?', [email.toLowerCase().trim()]);
     if (user) {
       const resetToken = crypto.randomBytes(32).toString('hex');
-      const resetExpires = new Date(Date.now() + 3600000); // 1 hour
+      let resetExpires;
+      if (dbMode === 'postgres') {
+        resetExpires = new Date(Date.now() + 3600000); // 1 hour, Date object for PostgreSQL
+      } else {
+        resetExpires = Math.floor((Date.now() + 3600000) / 1000); // seconds since epoch for SQLite
+      }
 
       await query.run(
         'UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?',
@@ -216,10 +221,18 @@ router.get('/reset-password', requireNoAuth, async (req, res) => {
   }
 
   try {
-    const user = await query.get(
-      'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
-      [token]
-    );
+    let user;
+    if (dbMode === 'postgres') {
+      user = await query.get(
+        'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
+        [token]
+      );
+    } else {
+      user = await query.get(
+        'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > ?',
+        [token, Math.floor(Date.now() / 1000)]
+      );
+    }
     if (!user) {
       return res.render('login', { error: 'Invalid or expired password reset token.', message: null });
     }
@@ -243,10 +256,18 @@ router.post('/reset-password', requireNoAuth, authLimiter, async (req, res) => {
   }
 
   try {
-    const user = await query.get(
-      'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
-      [token]
-    );
+    let user;
+    if (dbMode === 'postgres') {
+      user = await query.get(
+        'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
+        [token]
+      );
+    } else {
+      user = await query.get(
+        'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > ?',
+        [token, Math.floor(Date.now() / 1000)]
+      );
+    }
     if (!user) {
       return res.render('login', { error: 'Invalid or expired password reset token.', message: null });
     }
@@ -276,7 +297,12 @@ router.all('/logout', async (req, res) => {
       const decoded = jwt.decode(token);
       if (decoded && decoded.exp) {
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-        const expiresAt = new Date(decoded.exp * 1000);
+        let expiresAt;
+        if (dbMode === 'postgres') {
+          expiresAt = new Date(decoded.exp * 1000);
+        } else {
+          expiresAt = decoded.exp;
+        }
         await query.run(
           'INSERT INTO token_blacklist (token_hash, expires_at) VALUES (?, ?) ON CONFLICT DO NOTHING',
           [tokenHash, expiresAt]
