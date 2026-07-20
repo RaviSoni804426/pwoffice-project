@@ -80,6 +80,8 @@ app.use(helmet({
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/web-apps', express.static(path.join(__dirname, '../web-apps')));
+app.use('/sdkjs', express.static(path.join(__dirname, '../sdkjs')));
 
 const { isTokenBlacklisted } = require('./middleware/auth');
 
