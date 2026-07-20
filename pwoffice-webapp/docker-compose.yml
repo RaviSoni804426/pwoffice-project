@@ -11,9 +11,17 @@ services:
     environment:
       - PORT=3000
       - JWT_SECRET=fHgyNEq46tsbOsOJXeY7dLao9bz1Bjsa
-      - DOCUMENT_SERVER_PUBLIC_URL=http://pwoffice-documentserver
-      - WEBAPP_PUBLIC_URL=http://pwoffice-webapp:3000
+      - DOCUMENT_SERVER_PUBLIC_URL=http://localhost:8080
+      - DOCUMENT_SERVER_INTERNAL_URL=http://documentserver
+      - WEBAPP_PUBLIC_URL=http://localhost:3000
+      - WEBAPP_INTERNAL_URL=http://webapp:3000
       - DATABASE_FILE=/app/data/database.db
+      - PGHOST=host.docker.internal
+      - PGPORT=5432
+      - PGUSER=pwadmin
+      - PGPASSWORD=pwpass
+      - PGDATABASE=pwoffice
+      - GROQ_API_KEY=${GROQ_API_KEY}
     volumes:
       - webapp-data:/app/data
       - webapp-storage:/app/storage

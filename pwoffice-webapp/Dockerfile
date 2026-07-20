@@ -1,7 +1,5 @@
 FROM node:18-alpine
 
-# Install SQLite compile dependencies (needed for node-sqlite3 on some Alpine builds)
-RUN apk add --no-repeat python3 make g++
 
 WORKDIR /app
 

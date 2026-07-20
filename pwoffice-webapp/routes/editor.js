@@ -40,11 +40,12 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     }
 
     // Check if ONLYOFFICE Document Server is online
-    const docServerUrl = process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
+    const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
     let isDocServerOnline = true;
     try {
       await axios.get(`${docServerUrl}/healthcheck`, { timeout: 2000 });
     } catch (err) {
+      console.error('Healthcheck failed for URL:', `${docServerUrl}/healthcheck`, 'Error:', err.message, err.response?.status);
       isDocServerOnline = false;
     }
 
@@ -70,7 +71,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     const key = `${docId}_${new Date(document.last_modified).getTime()}`;
 
     // Base URL of our webapp for Document Server to download files and send callbacks
-    const webappUrl = process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
+    const webappUrl = process.env.WEBAPP_INTERNAL_URL || process.env.WEBAPP_PUBLIC_URL || `http://localhost:${process.env.PORT || 3000}`;
 
     // Generate a temporary download token to secure direct file access
     const downloadToken = jwt.sign(

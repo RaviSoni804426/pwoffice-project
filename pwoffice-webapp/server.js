@@ -4,6 +4,14 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// Validate critical environment variables
+const criticalEnvVars = ['JWT_SECRET', 'GROQ_API_KEY', 'PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGDATABASE'];
+const missingEnvVars = criticalEnvVars.filter(varName => !process.env[varName]);
+if (missingEnvVars.length > 0) {
+  console.error(`FATAL ERROR: Missing critical environment variables: ${missingEnvVars.join(', ')}`);
+  process.exit(1);
+}
+
 const { initDb } = require('./db');
 
 const app = express();
@@ -133,7 +141,7 @@ app.get('/api/health', async (req, res) => {
   }
 
   // 2. Check Document Server status
-  const docServerUrl = process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
+  const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
   try {
     // OnlyOffice healthcheck endpoint returns "true" or 200 OK
     const docRes = await axios.get(`${docServerUrl}/healthcheck`, { timeout: 3000 });
