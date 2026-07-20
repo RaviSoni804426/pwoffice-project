@@ -4,3 +4,4 @@ database.db
 storage/temp/*
 storage/*
 !storage/.gitkeep
+database.db
