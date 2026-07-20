@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= document.filename %> - PW Office Editor</title>
   <link rel="stylesheet" href="/css/style.css">
-  <!-- Load ONLYOFFICE Document Server JavaScript API -->
+  <!-- Load PWOFFICE Document Server JavaScript API -->
   <script type="text/javascript" src="<%= docServerUrl %>/web-apps/apps/api/documents/api.js"></script>
 </head>
 <body style="overflow: hidden; height: 100vh; display: flex; flex-direction: column;">
@@ -22,22 +22,22 @@
     </div>
   </div>
 
-  <!-- ONLYOFFICE Editor Container -->
+  <!-- PWOFFICE Editor Container -->
   <div id="iframeEditor"></div>
 
   <script type="text/javascript">
-    // Load ONLYOFFICE configuration
+    // Load PWOFFICE configuration
     const config = <%- JSON.stringify(config) %>;
     
     // Initialize the Editor
     try {
       if (typeof DocsAPI === 'undefined') {
-        document.write('<div style="padding: 2rem; color: red; font-weight: bold; text-align: center;">Error: ONLYOFFICE Document Server API script failed to load. Please check if the Document Server is running at <%= docServerUrl %>.</div>');
+        document.write('<div style="padding: 2rem; color: red; font-weight: bold; text-align: center;">Error: PWOFFICE Document Server API script failed to load. Please check if the Document Server is running at <%= docServerUrl %>.</div>');
       } else {
         const docEditor = new DocsAPI.DocEditor("iframeEditor", config);
       }
     } catch (e) {
-      console.error('Failed to load ONLYOFFICE editor:', e);
+      console.error('Failed to load PWOFFICE editor:', e);
     }
   </script>
 

@@ -14,10 +14,6 @@ const authLimiter = rateLimit({
   message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => {
-    const ip = req.ip || req.connection.remoteAddress;
-    return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
-  },
   handler: (req, res, next, options) => {
     res.status(options.statusCode).render(
       req.path.includes('signup') ? 'signup' : 'login',
@@ -61,7 +57,7 @@ router.post('/signup', requireNoAuth, authLimiter, async (req, res) => {
     // Check if user already exists
     const existingUser = await query.get('SELECT id FROM users WHERE email = ?', [email.toLowerCase().trim()]);
     if (existingUser) {
-      return res.render('signup', { error: 'Email already registered.' });
+      return res.render('signup', { error: 'An account with this email may already exist. Please try logging in or use a different email.' });
     }
 
     // Hash the password
@@ -158,7 +154,7 @@ router.post('/login', requireNoAuth, authLimiter, async (req, res) => {
     // Set cookie with sameSite: strict
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: false, // Set to true if running on HTTPS
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });

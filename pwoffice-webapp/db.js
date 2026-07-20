@@ -10,7 +10,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE || 'pwoffice',
   max: 20, // Connection pool limit
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 10000,
 });
 
 pool.on('error', (err) => {

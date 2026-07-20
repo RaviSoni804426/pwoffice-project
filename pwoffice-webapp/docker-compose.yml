@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15
+    container_name: pwoffice-postgres
+    environment:
+      - POSTGRES_DB=${PGDATABASE:-pwoffice}
+      - POSTGRES_USER=${PGUSER:-pwadmin}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
   webapp:
     build:
       context: .
@@ -10,22 +23,23 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
-      - JWT_SECRET=fHgyNEq46tsbOsOJXeY7dLao9bz1Bjsa
-      - DOCUMENT_SERVER_PUBLIC_URL=http://localhost:8080
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - DOCUMENT_SERVER_PUBLIC_URL=${DOCUMENT_SERVER_PUBLIC_URL:-http://localhost:8080}
       - DOCUMENT_SERVER_INTERNAL_URL=http://documentserver
-      - WEBAPP_PUBLIC_URL=http://localhost:3000
+      - WEBAPP_PUBLIC_URL=${WEBAPP_PUBLIC_URL:-http://localhost:3000}
       - WEBAPP_INTERNAL_URL=http://webapp:3000
-      - DATABASE_FILE=/app/data/database.db
-      - PGHOST=host.docker.internal
+      - PGHOST=postgres
       - PGPORT=5432
-      - PGUSER=pwadmin
-      - PGPASSWORD=pwpass
-      - PGDATABASE=pwoffice
+      - PGUSER=${PGUSER:-pwadmin}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE:-pwoffice}
       - GROQ_API_KEY=${GROQ_API_KEY}
     volumes:
       - webapp-data:/app/data
       - webapp-storage:/app/storage
     depends_on:
+      - postgres
       - documentserver
     restart: always
 
@@ -36,7 +50,7 @@ services:
       - "8080:80"
     environment:
       - JWT_ENABLED=true
-      - JWT_SECRET=fHgyNEq46tsbOsOJXeY7dLao9bz1Bjsa
+      - JWT_SECRET=${JWT_SECRET}
       - JWT_HEADER=Authorization
       - JWT_IN_BODY=true
     volumes:
@@ -45,7 +59,9 @@ services:
     restart: always
 
 volumes:
+  pgdata:
   webapp-data:
   webapp-storage:
   documentserver-data:
   documentserver-log:
+

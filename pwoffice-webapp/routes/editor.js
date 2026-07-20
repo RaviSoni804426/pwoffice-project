@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { requireAuth } = require('../middleware/auth');
 
-// Helper for download retry logic on external ONLYOFFICE callback url
+// Helper for download retry logic on external PWOFFICE callback url
 async function getWithRetry(url, options, retries = 3, delay = 1000) {
   for (let i = 0; i < retries; i++) {
     try {
@@ -39,7 +39,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       return res.redirect('/workspaces');
     }
 
-    // Check if ONLYOFFICE Document Server is online
+    // Check if PWOFFICE Document Server is online
     const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
     let isDocServerOnline = true;
     try {
@@ -57,7 +57,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       });
     }
 
-    // Determine document type for ONLYOFFICE
+    // Determine document type for PWOFFICE
     // "word" for text documents (.docx)
     // "cell" for spreadsheets (.xlsx)
     // "slide" for presentations (.pptx)
@@ -65,8 +65,8 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     if (document.file_type === 'xlsx') documentType = 'cell';
     if (document.file_type === 'pptx') documentType = 'slide';
 
-    // Unique key for ONLYOFFICE to identify the file version.
-    // If the key changes, ONLYOFFICE reloads the file.
+    // Unique key for PWOFFICE to identify the file version.
+    // If the key changes, PWOFFICE reloads the file.
     // We combine the doc ID, the timestamp of last modification, and a random string to bust cache.
     const key = `${docId}_${new Date(document.last_modified).getTime()}_${Date.now()}`;
 
@@ -83,7 +83,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       { expiresIn: '5m' }
     );
 
-    // ONLYOFFICE editor configuration object
+    // PWOFFICE editor configuration object
     const editorConfig = {
       document: {
         fileType: document.file_type,
@@ -120,8 +120,8 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       }
     };
 
-    // Sign configuration with ONLYOFFICE JWT Secret
-    // ONLYOFFICE expects the entire config to be signed in a token
+    // Sign configuration with PWOFFICE JWT Secret
+    // PWOFFICE expects the entire config to be signed in a token
     const token = jwt.sign(editorConfig, process.env.JWT_SECRET, { algorithm: 'HS256' });
     editorConfig.token = token;
 
@@ -136,7 +136,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
   }
 });
 
-// GET Download file (OnlyOffice Server calls this to load the document)
+// GET Download file (PWOFFICE Server calls this to load the document)
 router.get('/api/download/:docId', async (req, res) => {
   const docId = req.params.docId;
   const token = req.query.token;
@@ -171,15 +171,15 @@ router.get('/api/download/:docId', async (req, res) => {
   }
 });
 
-// POST Save Callback (OnlyOffice Server calls this when saving/editing)
+// POST Save Callback (PWOFFICE Server calls this when saving/editing)
 router.post('/api/callback/:docId', async (req, res) => {
   const docId = req.params.docId;
   let body = req.body;
 
   console.log(`Callback received for document ${docId}. Headers:`, req.headers);
 
-  // Parse JWT token from ONLYOFFICE callback if present
-  // ONLYOFFICE sends JWT either in request header: Authorization: Bearer <token>
+  // Parse JWT token from PWOFFICE callback if present
+  // PWOFFICE sends JWT either in request header: Authorization: Bearer <token>
   // or inside request body: { token: <token> }
   let jwtToken = body.token;
   if (!jwtToken && req.headers['authorization']) {
@@ -199,10 +199,10 @@ router.post('/api/callback/:docId', async (req, res) => {
     }
   } else {
     // If JWT is configured as required, we must reject requests without token
-    console.warn('Warning: ONLYOFFICE callback did not contain JWT token.');
+    console.warn('Warning: PWOFFICE callback did not contain JWT token.');
   }
 
-  console.log(`ONLYOFFICE Callback status for doc ${docId}:`, body.status);
+  console.log(`PWOFFICE Callback status for doc ${docId}:`, body.status);
 
   // Status 2: Document ready for saving (after close)
   // Status 6: Document force-saved (saving while open)
@@ -225,7 +225,7 @@ router.post('/api/callback/:docId', async (req, res) => {
         internalDownloadUrl = downloadUrl.replace(publicUrl, internalUrl);
       }
 
-      console.log(`Downloading updated file from ONLYOFFICE: ${internalDownloadUrl}`);
+      console.log(`Downloading updated file from PWOFFICE: ${internalDownloadUrl}`);
 
       const response = await getWithRetry(internalDownloadUrl, {
         method: 'get',
@@ -248,12 +248,12 @@ router.post('/api/callback/:docId', async (req, res) => {
 
       console.log(`Document ${docId} successfully saved to storage.`);
     } catch (err) {
-      console.error('Error saving file from ONLYOFFICE callback:', err);
+      console.error('Error saving file from PWOFFICE callback:', err);
       return res.status(500).send({ error: 1, message: 'Error saving document' });
     }
   }
 
-  res.send({ error: 0 }); // Status 0 tells ONLYOFFICE that the callback succeeded
+  res.send({ error: 0 }); // Status 0 tells PWOFFICE that the callback succeeded
 });
 
 module.exports = router;

@@ -1136,7 +1136,7 @@ footer {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  z-index: 9999;
+  z-index: 99999;
   font-family: inherit;
 }
 
