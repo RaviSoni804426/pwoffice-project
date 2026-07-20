@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { query, dbMode } = require('../db');
+const { query, getDbMode } = require('../db');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -68,8 +68,9 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     // Unique key for PWOFFICE to identify the file version.
     // If the key changes, PWOFFICE reloads the file.
     // We combine the doc ID, the timestamp of last modification, and a random string to bust cache.
+    const currentDbMode = await getDbMode();
     let lastModifiedMs;
-    if (dbMode === 'postgres') {
+    if (currentDbMode === 'postgres') {
       lastModifiedMs = new Date(document.last_modified).getTime();
     } else {
       lastModifiedMs = document.last_modified * 1000;
@@ -264,7 +265,8 @@ router.post('/api/callback/:docId', async (req, res) => {
       });
 
       // Update last_modified in DB
-      if (dbMode === 'postgres') {
+      const currentDbMode = await getDbMode();
+      if (currentDbMode === 'postgres') {
         await query.run(
           'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
           [docId]

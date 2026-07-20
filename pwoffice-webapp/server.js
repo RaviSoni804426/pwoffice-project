@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); // Server restart trigger
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
@@ -116,7 +116,7 @@ app.use('/', editorRoutes);
 app.use('/', chatRoutes);
 
 const axios = require('axios');
-const { query, dbMode } = require('./db');
+const { query, getDbMode } = require('./db');
 
 // Healthcheck Endpoint
 app.get('/api/health', async (req, res) => {
@@ -131,7 +131,8 @@ app.get('/api/health', async (req, res) => {
 
   // 1. Check database connectivity
   try {
-    if (dbMode === 'postgres') {
+    const currentDbMode = await getDbMode();
+    if (currentDbMode === 'postgres') {
       const dbRes = await query.get('SELECT 1');
       if (dbRes) {
         healthStatus.database.status = 'connected (PostgreSQL)';

@@ -3,11 +3,17 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
 
-let dbMode = 'postgres';
+let dbMode = null;
 let pool;
 let db;
 let query;
 let currentDb;
+let initializedPromiseResolve;
+let initializedPromiseReject;
+const initializedPromise = new Promise((resolve, reject) => {
+  initializedPromiseResolve = resolve;
+  initializedPromiseReject = reject;
+});
 
 async function setupPostgres() {
   pool = new Pool({
@@ -260,16 +266,46 @@ async function initDb() {
     await query.run(`CREATE INDEX IF NOT EXISTS idx_user_workspaces_user_id ON user_workspaces(user_id)`);
 
     console.log('Database tables and indexes initialized successfully.');
+    initializedPromiseResolve();
   } catch (err) {
     console.error('Error initializing database tables:', err);
+    initializedPromiseReject(err);
     process.exit(1);
   }
 }
 
+// Export a query object that waits for initialization before executing methods
+const wrappedQuery = {
+  async run(...args) {
+    await initializedPromise;
+    return query.run(...args);
+  },
+  async get(...args) {
+    await initializedPromise;
+    return query.get(...args);
+  },
+  async all(...args) {
+    await initializedPromise;
+    return query.all(...args);
+  }
+};
+
+const getDbMode = async () => {
+  await initializedPromise;
+  return dbMode;
+};
+
 module.exports = {
-  db: currentDb,
-  pool,
-  query,
+  get db() {
+    return currentDb;
+  },
+  get pool() {
+    return pool;
+  },
+  query: wrappedQuery,
   initDb,
-  dbMode
+  get dbMode() {
+    return getDbMode();
+  },
+  getDbMode
 };

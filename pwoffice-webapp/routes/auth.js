@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
-const { query, dbMode } = require('../db');
+const { query, getDbMode } = require('../db');
 const { requireNoAuth } = require('../middleware/auth');
 
 // Brute-force protection: max 15 auth attempts per 15 minutes
@@ -182,8 +182,9 @@ router.post('/forgot-password', requireNoAuth, authLimiter, async (req, res) => 
     const user = await query.get('SELECT id FROM users WHERE email = ?', [email.toLowerCase().trim()]);
     if (user) {
       const resetToken = crypto.randomBytes(32).toString('hex');
+      const currentDbMode = await getDbMode();
       let resetExpires;
-      if (dbMode === 'postgres') {
+      if (currentDbMode === 'postgres') {
         resetExpires = new Date(Date.now() + 3600000); // 1 hour, Date object for PostgreSQL
       } else {
         resetExpires = Math.floor((Date.now() + 3600000) / 1000); // seconds since epoch for SQLite
@@ -221,8 +222,9 @@ router.get('/reset-password', requireNoAuth, async (req, res) => {
   }
 
   try {
+    const currentDbMode = await getDbMode();
     let user;
-    if (dbMode === 'postgres') {
+    if (currentDbMode === 'postgres') {
       user = await query.get(
         'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
         [token]
@@ -256,8 +258,9 @@ router.post('/reset-password', requireNoAuth, authLimiter, async (req, res) => {
   }
 
   try {
+    const currentDbMode = await getDbMode();
     let user;
-    if (dbMode === 'postgres') {
+    if (currentDbMode === 'postgres') {
       user = await query.get(
         'SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > CURRENT_TIMESTAMP',
         [token]
@@ -297,8 +300,9 @@ router.all('/logout', async (req, res) => {
       const decoded = jwt.decode(token);
       if (decoded && decoded.exp) {
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        const currentDbMode = await getDbMode();
         let expiresAt;
-        if (dbMode === 'postgres') {
+        if (currentDbMode === 'postgres') {
           expiresAt = new Date(decoded.exp * 1000);
         } else {
           expiresAt = decoded.exp;
