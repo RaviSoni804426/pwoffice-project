@@ -57,7 +57,7 @@ services:
       - webapp-data:/app/data
       - webapp-storage:/app/storage
     ports:
-      - "3000:3000"
+      - "3010:3000"
 
   nginx:
     image: nginx:alpine

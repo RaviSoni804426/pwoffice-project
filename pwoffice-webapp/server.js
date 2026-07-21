@@ -4,6 +4,12 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+const https = require('https');
+const axios = require('axios');
+axios.defaults.httpsAgent = new https.Agent({
+  rejectUnauthorized: process.env.NODE_TLS_REJECT_UNAUTHORIZED === '0' || process.env.NODE_ENV !== 'production' ? false : true
+});
+
 // Validate critical environment variables
 const criticalEnvVars = ['JWT_SECRET', 'GROQ_API_KEY'];
 const missingEnvVars = criticalEnvVars.filter(varName => !process.env[varName]);
@@ -116,7 +122,6 @@ app.use('/', workspaceRoutes);
 app.use('/', editorRoutes);
 app.use('/', chatRoutes);
 
-const axios = require('axios');
 const { query } = require('./db');
 
 // Healthcheck Endpoint
