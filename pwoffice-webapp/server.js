@@ -149,7 +149,7 @@ app.get('/api/health', async (req, res) => {
   const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
   try {
     // OnlyOffice healthcheck endpoint returns "true" or 200 OK
-    const docRes = await axios.get(`${docServerUrl}/healthcheck`, { timeout: 3000 });
+    const docRes = await axios.get(`${docServerUrl}/healthcheck`, { timeout: 10000 });
     if (docRes.status === 200) {
       healthStatus.documentServer.status = 'online';
     } else {

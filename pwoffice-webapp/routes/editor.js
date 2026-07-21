@@ -43,7 +43,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
     let isDocServerOnline = true;
     try {
-      await axios.get(`${docServerUrl}/healthcheck`, { timeout: 2000 });
+      await axios.get(`${docServerUrl}/healthcheck`, { timeout: 10000 });
     } catch (err) {
       console.error('Healthcheck failed for URL:', `${docServerUrl}/healthcheck`, 'Error:', err.message, err.response?.status);
       isDocServerOnline = false;
