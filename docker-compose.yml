@@ -13,6 +13,8 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - pwoffice-network
 
   docserver:
     image: pwoffice-server:final
@@ -29,6 +31,8 @@ services:
       - docserver_log:/var/log/onlyoffice
     expose:
       - "80"
+    networks:
+      - pwoffice-network
 
   webapp:
     build:
@@ -45,7 +49,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - DOCUMENT_SERVER_PUBLIC_URL=${DOCUMENT_SERVER_PUBLIC_URL:-http://localhost}
       - DOCUMENT_SERVER_INTERNAL_URL=http://docserver
-      - WEBAPP_PUBLIC_URL=${WEBAPP_PUBLIC_URL:-http://localhost:3000}
+      - WEBAPP_PUBLIC_URL=${WEBAPP_PUBLIC_URL:-http://localhost}
       - WEBAPP_INTERNAL_URL=http://webapp:3000
       - PGHOST=postgres
       - PGPORT=5432
@@ -58,6 +62,8 @@ services:
       - webapp-storage:/app/storage
     ports:
       - "3010:3000"
+    networks:
+      - pwoffice-network
 
   nginx:
     image: nginx:alpine
@@ -73,6 +79,8 @@ services:
     depends_on:
       - webapp
       - docserver
+    networks:
+      - pwoffice-network
 
   certbot:
     image: certbot/certbot
@@ -81,6 +89,8 @@ services:
       - ./certs:/etc/letsencrypt
       - certbot-web:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit 0; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - pwoffice-network
 
 volumes:
   pgdata:
@@ -89,3 +99,7 @@ volumes:
   webapp-data:
   webapp-storage:
   certbot-web:
+
+networks:
+  pwoffice-network:
+    driver: bridge

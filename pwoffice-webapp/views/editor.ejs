@@ -25,10 +25,13 @@
     <!-- PWOFFICE Editor Container -->
     <div id="iframeEditor" style="flex: 1; min-height: 60vh;"></div>
     <div id="fallback-message" style="display: none; padding: 3rem; text-align: center; flex: 1;">
-        <h2 style="color: var(--primary); margin-bottom: 1rem;">Editor Setup</h2>
-        <p style="max-width: 600px; margin: 0 auto 1.5rem;">The document editing service is not currently running. To use the full editor, please start Docker Desktop and run the document server.</p>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem;">Your documents are safe and accessible in your dashboard!</p>
-        <a href="/workspace/<%= document.workspace_id %>" class="btn btn-primary">Return to Dashboard</a>
+        <h2 style="color: var(--primary); margin-bottom: 1rem;">Editor Temporarily Unavailable</h2>
+        <p style="max-width: 600px; margin: 0 auto 1.5rem;">The document editing service is still starting up or temporarily unreachable. This usually resolves within a few seconds.</p>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem;">Your documents are safe. Please try refreshing the page in a moment.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="" onclick="location.reload(); return false;" class="btn btn-primary">Refresh Page</a>
+            <a href="/workspace/<%= document.workspace_id %>" class="btn btn-secondary">Return to Dashboard</a>
+        </div>
     </div>
 
     <script type="text/javascript">
