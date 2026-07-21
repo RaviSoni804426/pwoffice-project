@@ -111,10 +111,10 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
           chat: false,
           forcesave: false, // We can enable force save if desired
           logo: {
-            image: `${webappInternalUrl}/images/pw-logo.png`,
-            imageLight: `${webappInternalUrl}/images/pw-logo.png`,
-            imageDark: `${webappInternalUrl}/images/pw-logo.png`,
-            imageEmbedded: `${webappInternalUrl}/images/pw-logo.png`,
+            image: `${webappPublicUrl}/images/pw-logo.png`,
+            imageLight: `${webappPublicUrl}/images/pw-logo.png`,
+            imageDark: `${webappPublicUrl}/images/pw-logo.png`,
+            imageEmbedded: `${webappPublicUrl}/images/pw-logo.png`,
             url: webappPublicUrl
           },
           customer: {
@@ -123,10 +123,10 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
             mail: '',
             www: ''
           },
-          loaderLogo: `${webappInternalUrl}/images/pw-logo.png`,
-          logoImage: `${webappInternalUrl}/images/pw-logo.png`,
-          logoImageDark: `${webappInternalUrl}/images/pw-logo.png`,
-          logoImageLight: `${webappInternalUrl}/images/pw-logo.png`,
+          loaderLogo: `${webappPublicUrl}/images/pw-logo.png`,
+          logoImage: `${webappPublicUrl}/images/pw-logo.png`,
+          logoImageDark: `${webappPublicUrl}/images/pw-logo.png`,
+          logoImageLight: `${webappPublicUrl}/images/pw-logo.png`,
           hideRightMenu: false,
           hideRulers: false,
           compactHeader: false,
