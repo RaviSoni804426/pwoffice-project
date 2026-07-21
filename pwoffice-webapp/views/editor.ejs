@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= document.filename %> - PW Office Editor</title>
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Load PWOFFICE Document Server JavaScript API -->
-    <script type="text/javascript" src="<%= docServerUrl %>/web-apps/apps/api/documents/api.js"></script>
 </head>
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
@@ -34,26 +32,61 @@
         </div>
     </div>
 
+    <!-- Load PWOFFICE Document Server JavaScript API dynamically -->
     <script type="text/javascript">
         // Load PWOFFICE configuration
         const config = <%- JSON.stringify(config) %>;
         
-        // Initialize the Editor
-        try {
-            if (typeof DocsAPI === 'undefined') {
+        // Load the API script dynamically with proper error handling
+        function loadApiScript() {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = '<%= docServerUrl %>/web-apps/apps/api/documents/api.js';
+            script.async = true;
+            
+            script.onload = function() {
+                console.log('API script loaded successfully');
+                initEditor();
+            };
+            
+            script.onerror = function() {
+                console.error('Failed to load API script from:', script.src);
                 document.getElementById('iframeEditor').style.display = 'none';
                 document.getElementById('fallback-message').style.display = 'flex';
                 document.getElementById('fallback-message').style.flexDirection = 'column';
                 document.getElementById('fallback-message').style.justifyContent = 'center';
-            } else {
-                const docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+            };
+            
+            document.head.appendChild(script);
+        }
+        
+        // Initialize the Editor
+        function initEditor() {
+            try {
+                if (typeof DocsAPI === 'undefined') {
+                    console.error('DocsAPI is not defined even after script load.');
+                    document.getElementById('iframeEditor').style.display = 'none';
+                    document.getElementById('fallback-message').style.display = 'flex';
+                    document.getElementById('fallback-message').style.flexDirection = 'column';
+                    document.getElementById('fallback-message').style.justifyContent = 'center';
+                } else {
+                    console.log('DocsAPI loaded, initializing editor...');
+                    const docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+                }
+            } catch (e) {
+                console.error('Failed to load PWOFFICE editor:', e);
+                document.getElementById('iframeEditor').style.display = 'none';
+                document.getElementById('fallback-message').style.display = 'flex';
+                document.getElementById('fallback-message').style.flexDirection = 'column';
+                document.getElementById('fallback-message').style.justifyContent = 'center';
             }
-        } catch (e) {
-            console.error('Failed to load PWOFFICE editor:', e);
-            document.getElementById('iframeEditor').style.display = 'none';
-            document.getElementById('fallback-message').style.display = 'flex';
-            document.getElementById('fallback-message').style.flexDirection = 'column';
-            document.getElementById('fallback-message').style.justifyContent = 'center';
+        }
+
+        // Start loading the API script when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadApiScript);
+        } else {
+            loadApiScript();
         }
     </script>
 
