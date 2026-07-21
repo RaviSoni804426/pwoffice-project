@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pwoffice-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=${PGDATABASE:-pwoffice}
+      - POSTGRES_USER=${PGUSER:-pwadmin}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  docserver:
+    image: pwoffice-server:final
+    container_name: pwoffice-docserver
+    restart: always
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_HEADER=Authorization
+      - JWT_IN_BODY=true
+      - ALLOW_PRIVATE_IP_ADDRESS=true
+    volumes:
+      - docserver_data:/var/www/onlyoffice/Data
+      - docserver_log:/var/log/onlyoffice
+    expose:
+      - "80"
+
+  webapp:
+    build:
+      context: ./pwoffice-webapp
+      dockerfile: Dockerfile
+    container_name: pwoffice-webapp
+    restart: always
+    depends_on:
+      - postgres
+      - docserver
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - DOCUMENT_SERVER_PUBLIC_URL=${DOCUMENT_SERVER_PUBLIC_URL:-http://localhost}
+      - DOCUMENT_SERVER_INTERNAL_URL=http://docserver
+      - WEBAPP_PUBLIC_URL=${WEBAPP_PUBLIC_URL:-http://localhost:3000}
+      - WEBAPP_INTERNAL_URL=http://webapp:3000
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGUSER=${PGUSER:-pwadmin}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE:-pwoffice}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - webapp-data:/app/data
+      - webapp-storage:/app/storage
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: nginx:alpine
+    container_name: pwoffice-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/letsencrypt:ro
+      - certbot-web:/var/www/certbot
+    depends_on:
+      - webapp
+      - docserver
+
+  certbot:
+    image: certbot/certbot
+    container_name: pwoffice-certbot
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - certbot-web:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit 0; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  pgdata:
+  docserver_data:
+  docserver_log:
+  webapp-data:
+  webapp-storage:
+  certbot-web:

@@ -1,7 +1,27 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
+// Load environment variables from .env file if it exists, to avoid external dotenv dependency
+const envPath = path.resolve(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const envConfig = fs.readFileSync(envPath, 'utf-8');
+  envConfig.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const parts = trimmed.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        let val = parts.slice(1).join('=').trim();
+        if (val.startsWith('"') && val.endsWith('"')) {
+          val = val.slice(1, -1);
+        } else if (val.startsWith("'") && val.endsWith("'")) {
+          val = val.slice(1, -1);
+        }
+        process.env[key] = val;
+      }
+    }
+  });
+}
 
 const backupDir = path.resolve(__dirname, '../backups');
 if (!fs.existsSync(backupDir)) {

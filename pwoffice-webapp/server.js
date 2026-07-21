@@ -80,8 +80,7 @@ app.use(helmet({
 
 // Serve Static Files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/web-apps', express.static(path.join(__dirname, '../web-apps')));
-app.use('/sdkjs', express.static(path.join(__dirname, '../sdkjs')));
+
 
 const { isTokenBlacklisted } = require('./middleware/auth');
 
@@ -118,7 +117,7 @@ app.use('/', editorRoutes);
 app.use('/', chatRoutes);
 
 const axios = require('axios');
-const { query, getDbMode } = require('./db');
+const { query } = require('./db');
 
 // Healthcheck Endpoint
 app.get('/api/health', async (req, res) => {
@@ -133,23 +132,12 @@ app.get('/api/health', async (req, res) => {
 
   // 1. Check database connectivity
   try {
-    const currentDbMode = await getDbMode();
-    if (currentDbMode === 'postgres') {
-      const dbRes = await query.get('SELECT 1');
-      if (dbRes) {
-        healthStatus.database.status = 'connected (PostgreSQL)';
-      } else {
-        isHealthy = false;
-        healthStatus.database.status = 'disconnected';
-      }
+    const dbRes = await query.get('SELECT 1');
+    if (dbRes) {
+      healthStatus.database.status = 'connected (PostgreSQL)';
     } else {
-      const dbRes = await query.get('SELECT 1');
-      if (dbRes) {
-        healthStatus.database.status = 'connected (SQLite)';
-      } else {
-        isHealthy = false;
-        healthStatus.database.status = 'disconnected';
-      }
+      isHealthy = false;
+      healthStatus.database.status = 'disconnected';
     }
   } catch (err) {
     isHealthy = false;

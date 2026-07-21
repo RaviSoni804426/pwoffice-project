@@ -1,13 +1,8 @@
 # Ignore everything by default
 *
 
-# Allow web-apps and sdkjs folders for build context
-!web-apps
-!sdkjs
+# Allow pwoffice-webapp folder for build context
+!pwoffice-webapp
 
-# Exclude large development/history/unnecessary folders
-web-apps/.git
-web-apps/**/node_modules
-web-apps/**/.git
-sdkjs/.git
-sdkjs/**/.git
+# Ignore branding-source
+branding-source/

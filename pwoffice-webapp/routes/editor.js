@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { query, getDbMode } = require('../db');
+const { query } = require('../db');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -39,24 +39,23 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       return res.redirect('/workspaces');
     }
 
-    // Check if PWOFFICE Document Server is online (TEMPORARILY SKIPPED FOR TESTING)
+    // Check if PWOFFICE Document Server is online
     const docServerUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
     let isDocServerOnline = true;
     try {
       await axios.get(`${docServerUrl}/healthcheck`, { timeout: 2000 });
     } catch (err) {
       console.error('Healthcheck failed for URL:', `${docServerUrl}/healthcheck`, 'Error:', err.message, err.response?.status);
-      console.warn('Skipping document server healthcheck temporarily for testing');
-      isDocServerOnline = true; // TEMPORARY: always true for testing
+      isDocServerOnline = false;
     }
 
-    // if (!isDocServerOnline) {
-    //   return res.status(503).render('error', {
-    //     statusCode: 503,
-    //     title: 'Editor Temporarily Unavailable',
-    //     message: 'The document editing service is temporarily offline or undergoing maintenance. Your documents are safe. Please try again in a few moments.'
-    //   });
-    // }
+    if (!isDocServerOnline) {
+      return res.status(503).render('error', {
+        statusCode: 503,
+        title: 'Editor Temporarily Unavailable',
+        message: 'The document editing service is temporarily offline or undergoing maintenance. Your documents are safe. Please try again in a few moments.'
+      });
+    }
 
     // Determine document type for PWOFFICE
     // "word" for text documents (.docx)
@@ -69,13 +68,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     // Unique key for PWOFFICE to identify the file version.
     // If the key changes, PWOFFICE reloads the file.
     // We combine the doc ID, the timestamp of last modification, and a random string to bust cache.
-    const currentDbMode = await getDbMode();
-    let lastModifiedMs;
-    if (currentDbMode === 'postgres') {
-      lastModifiedMs = new Date(document.last_modified).getTime();
-    } else {
-      lastModifiedMs = document.last_modified * 1000;
-    }
+    const lastModifiedMs = new Date(document.last_modified).getTime();
     const key = `${docId}_${lastModifiedMs}_${Date.now()}`;
 
     // URL for Document Server to download files and send callbacks
@@ -266,18 +259,10 @@ router.post('/api/callback/:docId', async (req, res) => {
       });
 
       // Update last_modified in DB
-      const currentDbMode = await getDbMode();
-      if (currentDbMode === 'postgres') {
-        await query.run(
-          'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
-          [docId]
-        );
-      } else {
-        await query.run(
-          'UPDATE documents SET last_modified = ? WHERE id = ?',
-          [Math.floor(Date.now() / 1000), docId]
-        );
-      }
+      await query.run(
+        'UPDATE documents SET last_modified = CURRENT_TIMESTAMP WHERE id = ?',
+        [docId]
+      );
 
       console.log(`Document ${docId} successfully saved to storage.`);
     } catch (err) {

@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-const { query, getDbMode } = require('../db');
+const { query } = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
 // Configure Multer for file uploads (temp upload directory)
@@ -132,21 +132,11 @@ router.post('/workspace/:id/create', requireAuth, async (req, res) => {
     }
 
     // Insert record to database first to get unique document ID
-    const currentDbMode = await getDbMode();
-    let docResult;
-    if (currentDbMode === 'postgres') {
-      docResult = await query.run(
-        `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
-         VALUES (?, ?, ?, ?, '', CURRENT_TIMESTAMP)`,
-        [cleanFilename, workspaceId, req.user.id, file_type]
-      );
-    } else {
-      docResult = await query.run(
-        `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [cleanFilename, workspaceId, req.user.id, file_type, '', Math.floor(Date.now() / 1000)]
-      );
-    }
+    const docResult = await query.run(
+      `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
+       VALUES (?, ?, ?, ?, '', CURRENT_TIMESTAMP)`,
+      [cleanFilename, workspaceId, req.user.id, file_type]
+    );
     const documentId = docResult.lastID;
 
     // Define storage location: storage/<workspace_id>/<doc_id>_<filename>
@@ -217,21 +207,11 @@ router.post('/workspace/:id/upload', requireAuth, (req, res, next) => {
     }
 
     // Insert record
-    const currentDbMode = await getDbMode();
-    let docResult;
-    if (currentDbMode === 'postgres') {
-      docResult = await query.run(
-        `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
-         VALUES (?, ?, ?, ?, '', CURRENT_TIMESTAMP)`,
-        [originalName, workspaceId, req.user.id, ext]
-      );
-    } else {
-      docResult = await query.run(
-        `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [originalName, workspaceId, req.user.id, ext, '', Math.floor(Date.now() / 1000)]
-      );
-    }
+    const docResult = await query.run(
+      `INSERT INTO documents (filename, workspace_id, owner_id, file_type, storage_path, last_modified) 
+       VALUES (?, ?, ?, ?, '', CURRENT_TIMESTAMP)`,
+      [originalName, workspaceId, req.user.id, ext]
+    );
     const documentId = docResult.lastID;
 
     // Define destination path
