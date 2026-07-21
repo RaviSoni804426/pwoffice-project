@@ -7,7 +7,7 @@ require('dotenv').config();
 const https = require('https');
 const axios = require('axios');
 axios.defaults.httpsAgent = new https.Agent({
-  rejectUnauthorized: process.env.NODE_TLS_REJECT_UNAUTHORIZED === '0' || process.env.NODE_ENV !== 'production' ? false : true
+  rejectUnauthorized: false
 });
 
 // Validate critical environment variables
