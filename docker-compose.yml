@@ -24,7 +24,7 @@ services:
       - JWT_ENABLED=true
       - JWT_SECRET=${JWT_SECRET}
       - JWT_HEADER=Authorization
-      - JWT_IN_BODY=true
+      - JWT_IN_BODY=false
       - ALLOW_PRIVATE_IP_ADDRESS=true
     volumes:
       - docserver_data:/var/www/onlyoffice/Data
