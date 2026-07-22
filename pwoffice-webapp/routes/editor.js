@@ -269,4 +269,81 @@ router.post('/api/callback/:docId', async (req, res) => {
   res.send({ error: 0 }); // Status 0 tells PWOFFICE that the callback succeeded
 });
 
+// GET Export / Download document in specified format (pdf, pptx, docx, xlsx, etc.)
+router.get('/api/export/:docId', async (req, res) => {
+  const docId = req.params.docId;
+  const requestedFormat = (req.query.format || 'pdf').toLowerCase();
+
+  try {
+    const document = await query.get('SELECT * FROM documents WHERE id = ?', [docId]);
+    if (!document || !document.storage_path || !fs.existsSync(document.storage_path)) {
+      return res.status(404).send('Document not found');
+    }
+
+    const webappInternalUrl = process.env.WEBAPP_INTERNAL_URL || 'http://webapp:3000';
+    const docServerInternalUrl = process.env.DOCUMENT_SERVER_INTERNAL_URL || 'http://docserver';
+
+    const userId = req.user ? req.user.id.toString() : '1';
+
+    const downloadToken = jwt.sign(
+      { docId: docId.toString(), userId: userId },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    const fileUrl = `${webappInternalUrl}/api/download/${docId}?token=${downloadToken}`;
+    const fileType = document.file_type;
+    const lastModifiedMs = new Date(document.last_modified).getTime();
+    const key = `${docId}_${lastModifiedMs}_${Date.now()}`;
+    const baseName = document.filename.substring(0, document.filename.lastIndexOf('.')) || document.filename;
+    const outputFilename = `${baseName}.${requestedFormat}`;
+
+    // Construct ONLYOFFICE ConvertService payload
+    const payload = {
+      async: false,
+      filetype: fileType,
+      key: key,
+      outputtype: requestedFormat,
+      title: outputFilename,
+      url: fileUrl
+    };
+
+    // Sign JWT token with server JWT_SECRET
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    
+    // Request conversion from ONLYOFFICE Document Server
+    const convertRes = await axios.post(`${docServerInternalUrl}/ConvertService.ashx`, {
+      ...payload,
+      token
+    }, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      timeout: 30000
+    });
+
+    if (convertRes.data && convertRes.data.fileUrl) {
+      let downloadConvertedUrl = convertRes.data.fileUrl;
+      const publicUrl = process.env.DOCUMENT_SERVER_PUBLIC_URL || 'http://localhost';
+      if (docServerInternalUrl !== publicUrl && downloadConvertedUrl.startsWith(publicUrl)) {
+        downloadConvertedUrl = downloadConvertedUrl.replace(publicUrl, docServerInternalUrl);
+      }
+
+      console.log(`Downloading converted file from ONLYOFFICE: ${downloadConvertedUrl}`);
+      const fileStream = await axios.get(downloadConvertedUrl, { responseType: 'stream' });
+      
+      res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(outputFilename)}"`);
+      res.setHeader('Content-Type', 'application/octet-stream');
+      fileStream.data.pipe(res);
+    } else {
+      console.error('ONLYOFFICE ConvertService error response:', convertRes.data);
+      res.status(500).send('Document conversion failed');
+    }
+  } catch (err) {
+    console.error('Error exporting document:', err.message);
+    res.status(500).send('Error exporting document');
+  }
+});
+
 module.exports = router;

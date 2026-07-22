@@ -16,8 +16,14 @@
             </a>
             <span class="editor-doc-title" style="font-size: 0.9rem; font-weight: 600; color: #f8fafc;"><%= document.filename %></span>
         </div>
-        <div style="font-size: 0.75rem; color: #94a3b8;">
-            Powered by PW Office Editor Engine
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <a href="/api/export/<%= document.id %>?format=pdf" download class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); text-decoration: none; font-weight: 600;">
+                &#8675; Export PDF
+            </a>
+            <a href="/api/export/<%= document.id %>?format=<%= document.file_type %>" download class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px; background: rgba(129, 140, 248, 0.15); color: #a5b4fc; border: 1px solid rgba(129, 140, 248, 0.3); text-decoration: none; font-weight: 600;">
+                &#8675; Export <%= document.file_type.toUpperCase() %>
+            </a>
+            <span style="font-size: 0.75rem; color: #64748b; margin-left: 0.5rem;">Powered by PW Office</span>
         </div>
     </div>
 
