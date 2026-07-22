@@ -63,6 +63,7 @@ services:
       - SMTP_PASS=${SMTP_PASS}
       - EMAIL_FROM=${EMAIL_FROM}
     volumes:
+      - ./pwoffice-webapp/server.js:/app/server.js
       - ./pwoffice-webapp/routes:/app/routes
       - ./pwoffice-webapp/views:/app/views
       - ./pwoffice-webapp/public:/app/public

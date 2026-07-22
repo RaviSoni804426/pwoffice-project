@@ -6,8 +6,8 @@
     <h1 style="font-size: 2.75rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">
       Download PW Office for Desktop
     </h1>
-    <p style="font-size: 1.15rem; color: var(--text-secondary, #94a3b8); max-width: 680px; margin: 0 auto; line-height: 1.6;">
-      Get the native PW Office desktop wrapper for Windows. Enjoy a dedicated workspace window, seamless document editing, and offline resilience.
+    <p style="font-size: 1.15rem; color: var(--text-secondary, #94a3b8); max-width: 720px; margin: 0 auto; line-height: 1.6;">
+      Get the native PW Office desktop wrapper for Windows, macOS, and Linux. Enjoy a dedicated workspace window, seamless document editing, and offline resilience.
     </p>
   </div>
 
@@ -17,7 +17,7 @@
     <div>
       <h4 style="color: #38bdf8; font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Developer Build Notice</h4>
       <p style="color: #94a3b8; font-size: 0.9rem; margin: 0; line-height: 1.5;">
-        This desktop build is currently pointing to the <strong>Local Testing URL (http://localhost)</strong>. It requires the PW Office Docker containers to be running on your machine to connect. Once deployed to Google Cloud, this build will be updated with the live production domain.
+        These desktop builds are currently pointing to the <strong>Local Testing URL (http://localhost)</strong>. They require the PW Office Docker containers to be running on your machine to connect. Once deployed to Google Cloud, these builds will be updated with the live production domain.
       </p>
     </div>
   </div>
@@ -47,7 +47,7 @@
 
         <div style="background: #0f172a; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.75rem; display: flex; justify-content: space-between;">
           <span>Version: <strong>1.0.0</strong></span>
-          <span>Size: <strong>~95.5 MB</strong></span>
+          <span>Size: <strong>~95.6 MB</strong></span>
           <span>Format: <strong>.exe (NSIS)</strong></span>
         </div>
       </div>
@@ -57,74 +57,112 @@
           &#8675; Download for Windows (.exe)
         </a>
         <div style="text-align: center; margin-top: 0.75rem; font-size: 0.8rem; color: #64748b;">
-          Direct installer link: <a href="/download/windows" style="color: #38bdf8;">PW-Office-Setup-1.0.0.exe</a>
+          Direct link: <a href="/download/windows" style="color: #38bdf8;">PW-Office-Setup-1.0.0.exe</a>
         </div>
       </div>
     </div>
 
-    <!-- MACOS CARD (COMING SOON) -->
-    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.25rem; opacity: 0.75; display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- MACOS CARD (ACTIVE) -->
+    <div style="background: #1e293b; border: 2px solid #38bdf8; border-radius: 16px; padding: 2.25rem; box-shadow: 0 12px 30px rgba(56, 189, 248, 0.15); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 12px; right: 16px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;">
+        Available Now
+      </div>
       <div>
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
-          <div style="width: 52px; height: 52px; background: #334155; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.75rem;">
+          <div style="width: 52px; height: 52px; background: #0284c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.75rem;">
             &#63743;
           </div>
           <div>
             <h3 style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.25rem;">macOS</h3>
-            <span style="font-size: 0.85rem; color: #64748b;">Apple Silicon & Intel</span>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Apple Silicon & Intel</span>
           </div>
         </div>
 
-        <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
-          Native macOS desktop build (.dmg / .app bundle) optimized for macOS Sonoma & Sequoia.
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Native macOS disk image (.dmg) build supporting both Apple Silicon (M-series) and Intel Macs.
         </p>
+
+        <div style="background: #0f172a; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.25rem; display: flex; justify-content: space-between;">
+          <span>Version: <strong>1.0.0</strong></span>
+          <span>Size: <strong>~116.5 MB</strong></span>
+          <span>Format: <strong>.dmg (Disk Image)</strong></span>
+        </div>
+
+        <!-- MACOS SECURITY NOTE -->
+        <div style="background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 1.5rem; font-size: 0.8rem; color: #fde047; line-height: 1.4;">
+          &#9888; <strong>First-time Mac users:</strong> right-click the app and select <em>Open</em> to bypass the macOS Gatekeeper security warning.
+        </div>
       </div>
 
-      <button disabled style="width: 100%; padding: 0.9rem; font-size: 0.95rem; font-weight: 600; border-radius: 10px; background: #334155; color: #94a3b8; border: none; cursor: not-allowed;">
-        Coming Soon for macOS
-      </button>
+      <div>
+        <a href="/downloads/PW-Office-1.0.0.dmg" class="btn btn-primary" download style="display: block; text-align: center; padding: 0.9rem 1.5rem; font-size: 1.05rem; font-weight: 700; text-decoration: none; border-radius: 10px; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);">
+          &#8675; Download for macOS (.dmg)
+        </a>
+        <div style="text-align: center; margin-top: 0.75rem; font-size: 0.8rem; color: #64748b;">
+          Direct link: <a href="/download/mac" style="color: #38bdf8;">PW-Office-1.0.0.dmg</a>
+        </div>
+      </div>
     </div>
 
-    <!-- LINUX CARD (COMING SOON) -->
-    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.25rem; opacity: 0.75; display: flex; flex-direction: column; justify-content: space-between;">
+    <!-- LINUX CARD (ACTIVE) -->
+    <div style="background: #1e293b; border: 2px solid #38bdf8; border-radius: 16px; padding: 2.25rem; box-shadow: 0 12px 30px rgba(56, 189, 248, 0.15); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 12px; right: 16px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;">
+        Available Now
+      </div>
       <div>
         <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
-          <div style="width: 52px; height: 52px; background: #334155; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.5rem; font-weight: bold;">
+          <div style="width: 52px; height: 52px; background: #0284c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.5rem; font-weight: bold;">
             &#128039;
           </div>
           <div>
             <h3 style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.25rem;">Linux</h3>
-            <span style="font-size: 0.85rem; color: #64748b;">AppImage / .deb / .rpm</span>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Ubuntu / Debian / Fedora / Arch</span>
           </div>
         </div>
 
-        <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
-          Universal AppImage and Debian package for Ubuntu, Fedora, and Arch Linux distributions.
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Universal AppImage executable and Debian (.deb) package for Linux distributions.
         </p>
+
+        <div style="background: #0f172a; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.75rem; display: flex; justify-content: space-between;">
+          <span>Version: <strong>1.0.0</strong></span>
+          <span>Sizes: <strong>~121 MB / ~95 MB</strong></span>
+          <span>Formats: <strong>AppImage & .deb</strong></span>
+        </div>
       </div>
 
-      <button disabled style="width: 100%; padding: 0.9rem; font-size: 0.95rem; font-weight: 600; border-radius: 10px; background: #334155; color: #94a3b8; border: none; cursor: not-allowed;">
-        Coming Soon for Linux
-      </button>
+      <div>
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <a href="/downloads/PW-Office-1.0.0.AppImage" class="btn btn-primary" download style="flex: 1; text-align: center; padding: 0.85rem 0.75rem; font-size: 0.95rem; font-weight: 700; text-decoration: none; border-radius: 10px; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);">
+            &#8675; AppImage
+          </a>
+          <a href="/downloads/PW-Office-1.0.0.deb" class="btn btn-primary" download style="flex: 1; text-align: center; padding: 0.85rem 0.75rem; font-size: 0.95rem; font-weight: 700; text-decoration: none; border-radius: 10px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);">
+            &#8675; .deb Package
+          </a>
+        </div>
+        <div style="text-align: center; font-size: 0.8rem; color: #64748b;">
+          Direct links: <a href="/download/linux-appimage" style="color: #38bdf8;">AppImage</a> | <a href="/download/linux-deb" style="color: #a78bfa;">.deb</a>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <!-- SYSTEM REQUIREMENTS & INFO SECTION -->
   <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.5rem; margin-bottom: 4rem;">
-    <h3 style="font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.25rem;">System Requirements</h3>
+    <h3 style="font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.25rem;">Supported System Specifications</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; color: #cbd5e1; font-size: 0.95rem;">
       <div>
-        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Operating System</h4>
-        <p style="margin: 0; color: #94a3b8;">Windows 10 64-bit or Windows 11 (build 19041 or higher).</p>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Windows OS</h4>
+        <p style="margin: 0; color: #94a3b8;">Windows 10 64-bit or Windows 11. Built with NSIS installer technology.</p>
       </div>
       <div>
-        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Hardware</h4>
-        <p style="margin: 0; color: #94a3b8;">Dual-core CPU, 4 GB RAM, 300 MB free disk space.</p>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">macOS</h4>
+        <p style="margin: 0; color: #94a3b8;">macOS Monterey, Ventura, Sonoma, Sequoia (Apple Silicon & Intel).</p>
       </div>
       <div>
-        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Network Connectivity</h4>
-        <p style="margin: 0; color: #94a3b8;">Local Docker server running at <code>http://localhost</code> (or live cloud URL post-deployment).</p>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Linux</h4>
+        <p style="margin: 0; color: #94a3b8;">Ubuntu 20.04+, Debian 11+, Fedora 36+, Arch Linux, and derivatives.</p>
       </div>
     </div>
   </div>

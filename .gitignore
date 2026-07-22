@@ -38,3 +38,9 @@ Dockerfile.pwoffice.*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Desktop Installers
+pwoffice-webapp/public/downloads/*.exe
+pwoffice-webapp/public/downloads/*.dmg
+pwoffice-webapp/public/downloads/*.AppImage
+pwoffice-webapp/public/downloads/*.deb

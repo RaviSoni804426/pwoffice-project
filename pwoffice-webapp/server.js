@@ -188,6 +188,24 @@ app.get('/download/windows', (req, res) => {
   res.download(filePath, 'PW-Office-Setup-1.0.0.exe');
 });
 
+// macOS Direct Download Route
+app.get('/download/mac', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'downloads', 'PW-Office-1.0.0.dmg');
+  res.download(filePath, 'PW-Office-1.0.0.dmg');
+});
+
+// Linux AppImage Direct Download Route
+app.get('/download/linux-appimage', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'downloads', 'PW-Office-1.0.0.AppImage');
+  res.download(filePath, 'PW-Office-1.0.0.AppImage');
+});
+
+// Linux Deb Direct Download Route
+app.get('/download/linux-deb', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'downloads', 'PW-Office-1.0.0.deb');
+  res.download(filePath, 'PW-Office-1.0.0.deb');
+});
+
 // Privacy Policy Route
 app.get('/privacy', (req, res) => {
   res.render('privacy');
