@@ -14,8 +14,7 @@
         <span class="logo-text">PW Office</span>
       </a>
       <nav class="nav-links">
-        <a href="/#features" style="color: var(--text-secondary); margin-right: 1rem; font-weight: 500;">Features</a>
-        <a href="/#pricing" style="color: var(--text-secondary); margin-right: 1.5rem; font-weight: 500;">Pricing</a>
+        <a href="/download" style="color: var(--text-secondary); margin-right: 1rem; font-weight: 500;">Download</a>
         <% if (locals.user) { %>
           <div class="nav-user">
             <span class="user-name">Hello, <%= user.name %></span>
@@ -23,6 +22,8 @@
             <a href="/logout" class="btn btn-danger">Logout</a>
           </div>
         <% } else { %>
+          <a href="/#features" style="color: var(--text-secondary); margin-right: 1rem; font-weight: 500;">Features</a>
+          <a href="/#pricing" style="color: var(--text-secondary); margin-right: 1.5rem; font-weight: 500;">Pricing</a>
           <a href="/login" class="btn btn-secondary">Login</a>
           <a href="/signup" class="btn btn-primary">Sign Up</a>
         <% } %>

@@ -57,10 +57,16 @@ services:
       - PGPASSWORD=${PGPASSWORD}
       - PGDATABASE=${PGDATABASE:-pwoffice}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - EMAIL_FROM=${EMAIL_FROM}
     volumes:
       - ./pwoffice-webapp/routes:/app/routes
       - ./pwoffice-webapp/views:/app/views
       - ./pwoffice-webapp/public:/app/public
+      - ./pwoffice-webapp/utils:/app/utils
       - webapp-data:/app/data
       - webapp-storage:/app/storage
     ports:

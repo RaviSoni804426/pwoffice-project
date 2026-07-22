@@ -1,0 +1,140 @@
+<%- include('partials/header') %>
+
+<div class="download-page-container" style="max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; user-select: none;">
+  <!-- PAGE HEADER -->
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <h1 style="font-size: 2.75rem; font-weight: 800; background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">
+      Download PW Office for Desktop
+    </h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary, #94a3b8); max-width: 680px; margin: 0 auto; line-height: 1.6;">
+      Get the native PW Office desktop wrapper for Windows. Enjoy a dedicated workspace window, seamless document editing, and offline resilience.
+    </p>
+  </div>
+
+  <!-- LOCAL DEV NOTE ALERT -->
+  <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 3rem; display: flex; align-items: flex-start; gap: 1rem;">
+    <div style="color: #38bdf8; font-size: 1.5rem; line-height: 1;">&#9432;</div>
+    <div>
+      <h4 style="color: #38bdf8; font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Developer Build Notice</h4>
+      <p style="color: #94a3b8; font-size: 0.9rem; margin: 0; line-height: 1.5;">
+        This desktop build is currently pointing to the <strong>Local Testing URL (http://localhost)</strong>. It requires the PW Office Docker containers to be running on your machine to connect. Once deployed to Google Cloud, this build will be updated with the live production domain.
+      </p>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD CARDS GRID -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+    
+    <!-- WINDOWS CARD (ACTIVE) -->
+    <div style="background: #1e293b; border: 2px solid #38bdf8; border-radius: 16px; padding: 2.25rem; box-shadow: 0 12px 30px rgba(56, 189, 248, 0.15); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 12px; right: 16px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;">
+        Available Now
+      </div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div style="width: 52px; height: 52px; background: #0284c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.75rem; font-weight: 800;">
+            &#x229e;
+          </div>
+          <div>
+            <h3 style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.25rem;">Windows</h3>
+            <span style="font-size: 0.85rem; color: #94a3b8;">Windows 10 / 11 (64-bit)</span>
+          </div>
+        </div>
+
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Full-featured standalone application setup for Windows with system menu, native windows controls, and splash loading.
+        </p>
+
+        <div style="background: #0f172a; border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.75rem; display: flex; justify-content: space-between;">
+          <span>Version: <strong>1.0.0</strong></span>
+          <span>Size: <strong>~95.5 MB</strong></span>
+          <span>Format: <strong>.exe (NSIS)</strong></span>
+        </div>
+      </div>
+
+      <div>
+        <a href="/downloads/PW-Office-Setup-1.0.0.exe" class="btn btn-primary" download style="display: block; text-align: center; padding: 0.9rem 1.5rem; font-size: 1.05rem; font-weight: 700; text-decoration: none; border-radius: 10px; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);">
+          &#8675; Download for Windows (.exe)
+        </a>
+        <div style="text-align: center; margin-top: 0.75rem; font-size: 0.8rem; color: #64748b;">
+          Direct installer link: <a href="/download/windows" style="color: #38bdf8;">PW-Office-Setup-1.0.0.exe</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACOS CARD (COMING SOON) -->
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.25rem; opacity: 0.75; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div style="width: 52px; height: 52px; background: #334155; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.75rem;">
+            &#63743;
+          </div>
+          <div>
+            <h3 style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.25rem;">macOS</h3>
+            <span style="font-size: 0.85rem; color: #64748b;">Apple Silicon & Intel</span>
+          </div>
+        </div>
+
+        <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Native macOS desktop build (.dmg / .app bundle) optimized for macOS Sonoma & Sequoia.
+        </p>
+      </div>
+
+      <button disabled style="width: 100%; padding: 0.9rem; font-size: 0.95rem; font-weight: 600; border-radius: 10px; background: #334155; color: #94a3b8; border: none; cursor: not-allowed;">
+        Coming Soon for macOS
+      </button>
+    </div>
+
+    <!-- LINUX CARD (COMING SOON) -->
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.25rem; opacity: 0.75; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+          <div style="width: 52px; height: 52px; background: #334155; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 1.5rem; font-weight: bold;">
+            &#128039;
+          </div>
+          <div>
+            <h3 style="font-size: 1.4rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.25rem;">Linux</h3>
+            <span style="font-size: 0.85rem; color: #64748b;">AppImage / .deb / .rpm</span>
+          </div>
+        </div>
+
+        <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem;">
+          Universal AppImage and Debian package for Ubuntu, Fedora, and Arch Linux distributions.
+        </p>
+      </div>
+
+      <button disabled style="width: 100%; padding: 0.9rem; font-size: 0.95rem; font-weight: 600; border-radius: 10px; background: #334155; color: #94a3b8; border: none; cursor: not-allowed;">
+        Coming Soon for Linux
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SYSTEM REQUIREMENTS & INFO SECTION -->
+  <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 2.5rem; margin-bottom: 4rem;">
+    <h3 style="font-size: 1.35rem; font-weight: 700; color: #f8fafc; margin-bottom: 1.25rem;">System Requirements</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; color: #cbd5e1; font-size: 0.95rem;">
+      <div>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Operating System</h4>
+        <p style="margin: 0; color: #94a3b8;">Windows 10 64-bit or Windows 11 (build 19041 or higher).</p>
+      </div>
+      <div>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Hardware</h4>
+        <p style="margin: 0; color: #94a3b8;">Dual-core CPU, 4 GB RAM, 300 MB free disk space.</p>
+      </div>
+      <div>
+        <h4 style="color: #38bdf8; font-size: 1rem; margin-bottom: 0.5rem;">Network Connectivity</h4>
+        <p style="margin: 0; color: #94a3b8;">Local Docker server running at <code>http://localhost</code> (or live cloud URL post-deployment).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-container" style="text-align: center; padding: 2rem; color: #64748b; font-size: 0.85rem;">
+    &copy; 2026 PW Office Workspace & Document Editor. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

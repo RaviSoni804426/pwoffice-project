@@ -177,6 +177,17 @@ app.get('/', (req, res) => {
   res.render('landing');
 });
 
+// Download Page Route
+app.get('/download', (req, res) => {
+  res.render('download');
+});
+
+// Windows Installer Direct Download Route
+app.get('/download/windows', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'downloads', 'PW-Office-Setup-1.0.0.exe');
+  res.download(filePath, 'PW-Office-Setup-1.0.0.exe');
+});
+
 // Privacy Policy Route
 app.get('/privacy', (req, res) => {
   res.render('privacy');

@@ -171,6 +171,8 @@ router.get('/forgot-password', requireNoAuth, (req, res) => {
   res.render('forgot-password', { error: null, message: null });
 });
 
+const { sendPasswordResetEmail } = require('../utils/mailer');
+
 // POST Forgot Password Request
 router.post('/forgot-password', requireNoAuth, authLimiter, async (req, res) => {
   const { email } = req.body;
@@ -189,18 +191,19 @@ router.post('/forgot-password', requireNoAuth, authLimiter, async (req, res) => 
         [resetToken, resetExpires, user.id]
       );
 
-      // Simulate sending password reset email via server logs
+      // Send real password reset email via Nodemailer
       const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${resetToken}`;
-      console.log(`\n==================================================`);
-      console.log(`[SIMULATED EMAIL] Password reset email sent to: ${email}`);
-      console.log(`Reset Link: ${resetUrl}`);
-      console.log(`==================================================\n`);
+      try {
+        await sendPasswordResetEmail(email.toLowerCase().trim(), resetUrl, 60);
+      } catch (mailErr) {
+        console.error('Failed to send password reset email:', mailErr);
+      }
     }
 
     // Always show a generic success message to prevent user enumeration attacks
     res.render('forgot-password', {
       error: null,
-      message: 'If the email exists, a password reset link has been printed to the server logs.'
+      message: 'If an account exists with that email address, a password reset link has been sent to your inbox.'
     });
   } catch (err) {
     console.error('Forgot password error:', err);
