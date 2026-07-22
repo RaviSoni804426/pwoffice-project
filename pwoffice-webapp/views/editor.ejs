@@ -6,22 +6,22 @@
     <title><%= document.filename %> - PW Office Editor</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body style="min-height: 100vh; display: flex; flex-direction: column;">
+<body style="height: 100vh; width: 100vw; margin: 0; padding: 0; overflow: hidden; background-color: #f4f5f7; position: relative;">
 
-    <div class="editor-back-nav">
+    <div class="editor-back-nav" style="height: 48px; position: absolute; top: 0; left: 0; right: 0; z-index: 10; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem;">
         <div style="display: flex; align-items: center; gap: 1rem;">
-            <a href="/workspace/<%= document.workspace_id %>" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+            <a href="/workspace/<%= document.workspace_id %>" class="btn btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.85rem;">
                 &larr; Back to Dashboard
             </a>
-            <span class="editor-doc-title"><%= document.filename %></span>
+            <span class="editor-doc-title" style="font-size: 0.95rem; font-weight: 600;"><%= document.filename %></span>
         </div>
-        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+        <div style="font-size: 0.8rem; color: var(--text-secondary);">
             Powered by PW Office Editor Engine
         </div>
     </div>
 
     <!-- PWOFFICE Editor Container -->
-    <div id="iframeEditor" style="flex: 1; min-height: 60vh;"></div>
+    <div id="iframeEditor" style="position: absolute; top: 48px; bottom: 0; left: 0; right: 0; width: 100%; height: calc(100vh - 48px); border: none; background-color: #ffffff;"></div>
     <div id="fallback-message" style="display: none; padding: 3rem; text-align: center; flex: 1;">
         <h2 style="color: var(--primary); margin-bottom: 1rem;">Editor Temporarily Unavailable</h2>
         <p style="max-width: 600px; margin: 0 auto 1.5rem;">The document editing service is still starting up or temporarily unreachable. This usually resolves within a few seconds.</p>

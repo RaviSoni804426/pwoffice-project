@@ -46,7 +46,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
     let isDocServerOnline = false;
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        const healthRes = await axios.get(`${docServerUrl}/healthcheck`, { timeout: 10000 });
+        const healthRes = await axios.get(`${docServerUrl}/healthcheck`, { timeout: 5000 });
         if (healthRes.status === 200) {
           isDocServerOnline = true;
           break;
@@ -54,7 +54,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
       } catch (err) {
         console.warn(`Healthcheck attempt ${attempt}/3 failed for ${docServerUrl}/healthcheck:`, err.message, err.response?.status || '');
         if (attempt < 3) {
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     }
@@ -96,6 +96,8 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
 
     // PWOFFICE editor configuration object
     const editorConfig = {
+      width: '100%',
+      height: '100%',
       document: {
         fileType: document.file_type,
         key: key,
