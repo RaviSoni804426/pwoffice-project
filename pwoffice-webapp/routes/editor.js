@@ -89,9 +89,9 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
 
     // Generate a temporary download token to secure direct file access
     const downloadToken = jwt.sign(
-      { docId: docId, userId: req.user.id },
+      { docId: docId.toString(), userId: req.user.id.toString() },
       process.env.JWT_SECRET,
-      { expiresIn: '5m' }
+      { expiresIn: '24h' }
     );
 
     // PWOFFICE editor configuration object
@@ -160,7 +160,7 @@ router.get('/api/download/:docId', async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.docId !== docId) {
+    if (decoded.docId.toString() !== docId.toString()) {
       return res.status(403).send('Forbidden: Token mismatch');
     }
   } catch (err) {
