@@ -121,25 +121,7 @@ router.get('/editor/:docId', requireAuth, async (req, res) => {
           about: false,
           feedback: false,
           chat: false,
-          forcesave: false, // We can enable force save if desired
-          logo: {
-            image: `${webappPublicUrl}/images/pw-logo.png`,
-            imageLight: `${webappPublicUrl}/images/pw-logo.png`,
-            imageDark: `${webappPublicUrl}/images/pw-logo.png`,
-            imageEmbedded: `${webappPublicUrl}/images/pw-logo.png`,
-            url: webappPublicUrl
-          },
-          customer: {
-            name: 'PW Office',
-            address: '',
-            mail: '',
-            www: ''
-          },
-          loaderLogo: `${webappPublicUrl}/images/pw-logo.png`,
-          loaderName: 'PW Office',
-          logoImage: `${webappPublicUrl}/images/pw-logo.png`,
-          logoImageDark: `${webappPublicUrl}/images/pw-logo.png`,
-          logoImageLight: `${webappPublicUrl}/images/pw-logo.png`,
+          forcesave: false,
           hideRightMenu: false,
           hideRulers: false,
           compactHeader: false,

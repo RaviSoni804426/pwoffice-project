@@ -6,22 +6,25 @@
     <title><%= document.filename %> - PW Office Editor</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body style="height: 100vh; width: 100vw; margin: 0; padding: 0; overflow: hidden; background-color: #f4f5f7; position: relative;">
+<body style="height: 100vh; width: 100vw; margin: 0; padding: 0; overflow: hidden; background-color: #0f172a; display: flex; flex-direction: column;">
 
-    <div class="editor-back-nav" style="height: 48px; position: absolute; top: 0; left: 0; right: 0; z-index: 10; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem;">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <a href="/workspace/<%= document.workspace_id %>" class="btn btn-secondary" style="padding: 0.35rem 0.8rem; font-size: 0.85rem;">
+    <!-- TOP BACK NAVIGATION BAR (Clean height 40px, non-overlapping flex item) -->
+    <div class="editor-back-nav" style="height: 40px; min-height: 40px; background: #0f172a; border-bottom: 1px solid #1e293b; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; z-index: 100;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <a href="/workspace/<%= document.workspace_id %>" class="btn btn-secondary" style="padding: 0.25rem 0.65rem; font-size: 0.8rem; border-radius: 6px; text-decoration: none;">
                 &larr; Back to Dashboard
             </a>
-            <span class="editor-doc-title" style="font-size: 0.95rem; font-weight: 600;"><%= document.filename %></span>
+            <span class="editor-doc-title" style="font-size: 0.9rem; font-weight: 600; color: #f8fafc;"><%= document.filename %></span>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-secondary);">
+        <div style="font-size: 0.75rem; color: #94a3b8;">
             Powered by PW Office Editor Engine
         </div>
     </div>
 
-    <!-- PWOFFICE Editor Container -->
-    <div id="iframeEditor" style="position: absolute; top: 48px; bottom: 0; left: 0; right: 0; width: 100%; height: calc(100vh - 48px); border: none; background-color: #ffffff;"></div>
+    <!-- PWOFFICE EDITOR CONTAINER (Flex 1 fills entire remaining height with zero overlap) -->
+    <div id="iframeEditor" style="flex: 1; width: 100%; height: calc(100vh - 40px); border: none; background-color: #ffffff;"></div>
+
+    <!-- FALLBACK ERROR MESSAGE -->
     <div id="fallback-message" style="display: none; padding: 3rem; text-align: center; flex: 1;">
         <h2 style="color: var(--primary); margin-bottom: 1rem;">Editor Temporarily Unavailable</h2>
         <p style="max-width: 600px; margin: 0 auto 1.5rem;">The document editing service is still starting up or temporarily unreachable. This usually resolves within a few seconds.</p>
@@ -32,12 +35,10 @@
         </div>
     </div>
 
-    <!-- Load PWOFFICE Document Server JavaScript API dynamically -->
+    <!-- LOAD PWOFFICE DOCUMENT SERVER API DYNAMICALLY -->
     <script type="text/javascript">
-        // Load PWOFFICE configuration
         const config = <%- JSON.stringify(config) %>;
         
-        // Load the API script dynamically with proper error handling
         function loadApiScript() {
             const script = document.createElement('script');
             script.type = 'text/javascript';
@@ -60,7 +61,6 @@
             document.head.appendChild(script);
         }
         
-        // Initialize the Editor
         function initEditor() {
             try {
                 if (typeof DocsAPI === 'undefined') {
@@ -82,7 +82,6 @@
             }
         }
 
-        // Start loading the API script when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', loadApiScript);
         } else {
@@ -90,5 +89,203 @@
         }
     </script>
 
+    <!-- FLOATING AI CHATBOT WIDGET (EDITOR PAGE ONLY) -->
+    <div class="editor-chat-widget" style="position: fixed; bottom: 24px; right: 24px; z-index: 2147483647 !important; font-family: inherit; pointer-events: auto !important;">
+        <!-- Chat Trigger Button -->
+        <button id="editorChatBtn" type="button" style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); border: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.2s ease; pointer-events: auto !important; z-index: 2147483647 !important;">
+            <span style="font-size: 1.6rem; color: #ffffff; pointer-events: none;">💬</span>
+            <span id="chatUnreadDot" style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444; position: absolute; top: 2px; right: 2px; border: 2px solid #0f172a; pointer-events: none;"></span>
+        </button>
+        
+        <!-- Chat Window Box -->
+        <div id="editorChatWindow" style="position: absolute; bottom: 68px; right: 0; width: 370px; height: 520px; background: #1e293b; border: 1px solid #334155; border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); display: none; flex-direction: column; overflow: hidden; z-index: 2147483647 !important; pointer-events: auto !important;">
+            <!-- Header -->
+            <div style="background: #0f172a; border-bottom: 1px solid #334155; padding: 0.9rem 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 1.4rem;">🤖</span>
+                    <div>
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #f8fafc;">PW Office AI Assistant</h4>
+                        <span style="font-size: 0.75rem; color: #34d399; font-weight: 500;">Online • Groq Formula & Editor Guide</span>
+                    </div>
+                </div>
+                <button id="editorChatCloseBtn" type="button" style="background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; padding: 0 4px;">&times;</button>
+            </div>
+
+            <!-- Messages Body -->
+            <div id="editorChatMessages" style="flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.85rem; background: #0f172a;">
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 0.85rem 1rem; max-width: 88%; align-self: flex-start; color: #cbd5e1; font-size: 0.88rem; line-height: 1.5;">
+                    <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #38bdf8;">Hello! I am your AI Assistant for PW Office Editor.</p>
+                    <p style="margin: 0;">Ask me about spreadsheet formulas (VLOOKUP, INDEX/MATCH, SUMIF), document formatting, or editor shortcuts!</p>
+                </div>
+            </div>
+
+            <!-- Quick Prompts -->
+            <div style="padding: 0.5rem 0.85rem; background: #1e293b; border-top: 1px solid #334155; display: flex; gap: 0.5rem; overflow-x: auto;">
+                <button type="button" onclick="sendQuickPrompt('How do I write a VLOOKUP formula?')" style="white-space: nowrap; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">VLOOKUP help</button>
+                <button type="button" onclick="sendQuickPrompt('Explain INDEX/MATCH with example')" style="white-space: nowrap; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">INDEX/MATCH</button>
+                <button type="button" onclick="sendQuickPrompt('How do I calculate SUMIF?')" style="white-space: nowrap; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">SUMIF formula</button>
+            </div>
+
+            <!-- Input Form (Action & Method prevented from form GET submission) -->
+            <form id="editorChatForm" onsubmit="handleEditorChatSubmit(event); return false;" style="padding: 0.85rem; background: #1e293b; border-top: 1px solid #334155; display: flex; gap: 0.5rem;">
+                <input type="text" id="editorChatInput" placeholder="Ask a formula or editing question..." required autocomplete="off" style="flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 0.55rem 0.8rem; color: #f8fafc; font-size: 0.85rem; outline: none;">
+                <button type="button" id="editorChatSendBtn" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; border: none; padding: 0.55rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [];
+
+        function toggleEditorChat() {
+            const windowBox = document.getElementById('editorChatWindow');
+            const dot = document.getElementById('chatUnreadDot');
+            if (dot) dot.style.display = 'none';
+            if (!windowBox) return;
+
+            const isHidden = windowBox.style.display === 'none' || windowBox.style.display === '' || getComputedStyle(windowBox).display === 'none';
+
+            if (isHidden) {
+                windowBox.style.display = 'flex';
+                setTimeout(() => {
+                    const input = document.getElementById('editorChatInput');
+                    if (input) input.focus();
+                }, 100);
+            } else {
+                windowBox.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('editorChatBtn');
+            const closeBtn = document.getElementById('editorChatCloseBtn');
+            const sendBtn = document.getElementById('editorChatSendBtn');
+            const chatForm = document.getElementById('editorChatForm');
+            const chatInput = document.getElementById('editorChatInput');
+
+            if (btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleEditorChat();
+                });
+            }
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleEditorChat();
+                });
+            }
+            if (sendBtn) {
+                sendBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleEditorChatSubmit(e);
+                    return false;
+                });
+            }
+            if (chatForm) {
+                chatForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleEditorChatSubmit(e);
+                    return false;
+                });
+            }
+            if (chatInput) {
+                chatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleEditorChatSubmit(e);
+                        return false;
+                    }
+                });
+            }
+        });
+
+        function appendMessage(role, text) {
+            const container = document.getElementById('editorChatMessages');
+            const bubble = document.createElement('div');
+            bubble.style.cssText = role === 'user'
+                ? 'background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; border-radius: 12px; padding: 0.75rem 1rem; max-width: 85%; align-self: flex-end; font-size: 0.85rem; line-height: 1.4;'
+                : 'background: #1e293b; border: 1px solid #334155; color: #cbd5e1; border-radius: 12px; padding: 0.75rem 1rem; max-width: 88%; align-self: flex-start; font-size: 0.85rem; line-height: 1.5;';
+            
+            const pre = document.createElement('pre');
+            pre.style.whiteSpace = 'pre-wrap';
+            pre.style.fontFamily = 'inherit';
+            pre.style.margin = '0';
+            pre.textContent = text;
+            bubble.appendChild(pre);
+
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('editorChatMessages');
+            const indicator = document.createElement('div');
+            indicator.id = 'editorTypingIndicator';
+            indicator.style.cssText = 'background: #1e293b; border: 1px solid #334155; color: #38bdf8; border-radius: 12px; padding: 0.6rem 0.9rem; max-width: 80%; align-self: flex-start; font-size: 0.8rem; font-style: italic;';
+            indicator.textContent = 'AI Assistant is thinking...';
+            container.appendChild(indicator);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('editorTypingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function sendQuickPrompt(promptText) {
+            appendMessage('user', promptText);
+            sendMessageToBackend(promptText);
+        }
+
+        async function handleEditorChatSubmit(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const input = document.getElementById('editorChatInput');
+            if (!input) return false;
+
+            const text = input.value.trim();
+            if (!text) return false;
+
+            input.value = '';
+            appendMessage('user', text);
+            await sendMessageToBackend(text);
+            return false;
+        }
+
+        async function sendMessageToBackend(messageText) {
+            showTypingIndicator();
+            chatHistory.push({ role: 'user', content: messageText });
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: chatHistory, context: 'editor' })
+                });
+
+                const data = await response.json();
+                removeTypingIndicator();
+
+                if (data.response) {
+                    appendMessage('assistant', data.response);
+                    chatHistory.push({ role: 'assistant', content: data.response });
+                } else {
+                    appendMessage('assistant', 'Sorry, I received an invalid response. Please try again.');
+                }
+            } catch (err) {
+                removeTypingIndicator();
+                appendMessage('assistant', 'Network error while reaching AI Assistant.');
+                console.error('Chat error:', err);
+            }
+        }
+    </script>
 </body>
 </html>
