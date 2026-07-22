@@ -77,6 +77,19 @@
                     document.getElementById('fallback-message').style.justifyContent = 'center';
                 } else {
                     console.log('DocsAPI loaded, initializing editor...');
+                    
+                    // Attach event listener for File -> Download As / Save As
+                    config.events = config.events || {};
+                    config.events.onRequestSaveAs = function(event) {
+                        console.log('onRequestSaveAs event fired from ONLYOFFICE:', event);
+                        let fileType = 'pdf';
+                        if (event && event.data) {
+                            fileType = event.data.fileType || event.data.filetype || 'pdf';
+                        }
+                        console.log('Redirecting to backend export route for format:', fileType);
+                        window.location.href = '/api/export/<%= document.id %>?format=' + encodeURIComponent(fileType);
+                    };
+
                     const docEditor = new DocsAPI.DocEditor("iframeEditor", config);
                 }
             } catch (e) {
